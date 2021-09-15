@@ -6,7 +6,6 @@ const handleLoginWithEmailAndPassword = async (email, password) => {
     await authApi.loginWithEmailAndPassword(email, password);
     return {
       isSuccess: true,
-      data: {},
     };
   } catch (err) {
     return {
@@ -40,7 +39,6 @@ const handleLogout = async () => {
     await authApi.logout();
     return {
       isSuccess: true,
-      data: {},
     };
   } catch (err) {
     return {
