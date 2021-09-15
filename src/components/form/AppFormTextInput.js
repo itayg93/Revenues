@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import {useFormikContext} from 'formik';
 
-import defaultStyles from '../config/defaultStyles';
+import defaultStyles from '../../config/defaultStyles';
 
 const AppFormTextInput = ({name, placeholder, ...otherProps}) => {
   const {values, handleChange, handleBlur} = useFormikContext();

@@ -5,9 +5,7 @@ import * as Yup from 'yup';
 
 import defaultStyles from '../config/defaultStyles';
 import AppScreen from '../components/AppScreen';
-import AppForm from '../components/AppForm';
-import AppFormTextInput from '../components/AppFormTextInput';
-import AppFormButton from '../components/AppFormButton';
+import {AppForm, AppFormTextInput, AppFormButton} from '../components/form';
 
 const validationSchema = Yup.object().shape({
   taxPoints: Yup.number(),

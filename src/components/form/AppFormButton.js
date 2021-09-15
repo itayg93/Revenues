@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native';
 import {Button} from 'react-native-paper';
 import {useFormikContext} from 'formik';
 
-import defaultStyles from '../config/defaultStyles';
+import defaultStyles from '../../config/defaultStyles';
 
 const AppFormButton = ({loading}) => {
   const {handleSubmit} = useFormikContext();
