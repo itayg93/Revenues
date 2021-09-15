@@ -4,19 +4,31 @@ import {TextInput} from 'react-native-paper';
 import {useFormikContext} from 'formik';
 
 import defaultStyles from '../../config/defaultStyles';
+import AppHelperText from '../AppHelperText';
 
-const AppFormTextInput = ({name, placeholder, ...otherProps}) => {
-  const {values, handleChange, handleBlur} = useFormikContext();
+const AppFormTextInput = ({
+  name,
+  placeholder,
+  icon,
+  onIconPress,
+  ...otherProps
+}) => {
+  const {values, handleChange, handleBlur, touched, errors} =
+    useFormikContext();
   return (
-    <TextInput
-      style={styles.textInput}
-      name={name}
-      placeholder={placeholder}
-      value={values[name]}
-      onChangeText={handleChange(name)}
-      onBlur={handleBlur(name)}
-      {...otherProps}
-    />
+    <>
+      <TextInput
+        style={styles.textInput}
+        name={name}
+        placeholder={placeholder}
+        value={values[name]}
+        onChangeText={handleChange(name)}
+        onBlur={handleBlur(name)}
+        right={icon && <TextInput.Icon name={icon} onPress={onIconPress} />}
+        {...otherProps}
+      />
+      <AppHelperText visible={touched[name]} message={errors[name]} />
+    </>
   );
 };
 

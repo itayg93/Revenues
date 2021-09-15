@@ -5,7 +5,7 @@ import {useFormikContext} from 'formik';
 
 import defaultStyles from '../../config/defaultStyles';
 
-const AppFormButton = ({loading}) => {
+const AppFormButton = ({loading, label = 'Submit'}) => {
   const {handleSubmit} = useFormikContext();
   return (
     <Button
@@ -13,7 +13,7 @@ const AppFormButton = ({loading}) => {
       mode="contained"
       loading={loading}
       onPress={handleSubmit}>
-      Submit
+      {label}
     </Button>
   );
 };
