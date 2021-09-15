@@ -12,10 +12,19 @@ const WelcomeScreen = ({navigation}) => {
       <Headline>Welcome</Headline>
       {/** buttons */}
       <View style={styles.buttonsContainer}>
+        {/** login */}
         <Button
           mode="contained"
           onPress={() => navigation.navigate(routes.LOGIN_SCREEN)}>
           Login
+        </Button>
+        {/** spacer */}
+        <View style={styles.spacer} />
+        {/** register */}
+        <Button
+          mode="contained"
+          onPress={() => navigation.navigate(routes.REGISTER_SCREEN)}>
+          Register
         </Button>
       </View>
     </AppScreen>
@@ -33,5 +42,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: defaultStyles.spacers.space10,
     left: defaultStyles.spacers.space10,
+  },
+  spacer: {
+    marginVertical: defaultStyles.spacers.space5,
   },
 });

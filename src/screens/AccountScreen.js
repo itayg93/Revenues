@@ -1,10 +1,14 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet} from 'react-native';
 import {Headline} from 'react-native-paper';
 import * as Yup from 'yup';
 
+import authContext from '../auth/authContext';
+import authService from '../services/authService';
+
 import defaultStyles from '../config/defaultStyles';
 import AppScreen from '../components/AppScreen';
+import AppUserProfileCard from '../components/AppUserProfileCard';
 import {AppForm, AppFormTextInput, AppFormButton} from '../components/form';
 
 const validationSchema = Yup.object().shape({
@@ -16,8 +20,19 @@ const validationSchema = Yup.object().shape({
 });
 
 const AccountScreen = () => {
+  const {user} = useContext(authContext);
+
+  const handleLogout = async () => {
+    let response = await authService.handleLogout();
+
+    if (!response.isSuccess) {
+      Alert.alert('Error', response.error);
+    }
+  };
+
   return (
     <AppScreen style={styles.contentContainer}>
+      <AppUserProfileCard user={user} onLogoutPress={handleLogout} />
       <AppForm
         initialValues={{
           taxPoints: '',

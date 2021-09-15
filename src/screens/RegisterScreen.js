@@ -9,18 +9,20 @@ import AppScreen from '../components/AppScreen';
 import {AppForm, AppFormTextInput, AppFormButton} from '../components/form';
 
 const validationSchema = Yup.object().shape({
+  name: Yup.string().required().label('Name'),
   email: Yup.string().required().email().label('Email'),
   password: Yup.string().required().min(6).label('Password'),
 });
 
-const LoginScreen = () => {
+const RegisterScreen = () => {
   const [loading, setLoading] = useState(false);
 
   const [hidePassword, setHidePassword] = useState(true);
 
-  const handleLogin = async values => {
+  const handleRegister = async values => {
     setLoading(true);
-    let response = await authService.handleLoginWithEmailAndPassword(
+    let response = await authService.handleRegisterWithEmailAndPassword(
+      values.name,
       values.email,
       values.password,
     );
@@ -35,11 +37,14 @@ const LoginScreen = () => {
     <AppScreen style={styles.contentContainer}>
       <AppForm
         initialValues={{
+          name: '',
           email: '',
           password: '',
         }}
         validationSchema={validationSchema}
-        onSubmit={values => handleLogin(values)}>
+        onSubmit={values => handleRegister(values)}>
+        {/** name */}
+        <AppFormTextInput name="name" placeholder="Name" autoCorrect={false} />
         {/** email */}
         <AppFormTextInput
           name="email"
@@ -59,13 +64,13 @@ const LoginScreen = () => {
           secureTextEntry={hidePassword}
         />
         {/** submit */}
-        <AppFormButton label="Login" loading={loading} />
+        <AppFormButton label="Register" loading={loading} />
       </AppForm>
     </AppScreen>
   );
 };
 
-export default LoginScreen;
+export default RegisterScreen;
 
 const styles = StyleSheet.create({
   contentContainer: {

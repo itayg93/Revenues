@@ -24,7 +24,15 @@ const AppFormTextInput = ({
         value={values[name]}
         onChangeText={handleChange(name)}
         onBlur={handleBlur(name)}
-        right={icon && <TextInput.Icon name={icon} onPress={onIconPress} />}
+        right={
+          icon && (
+            <TextInput.Icon
+              name={icon}
+              color={defaultStyles.colors.mediumGrey}
+              onPress={onIconPress}
+            />
+          )
+        }
         {...otherProps}
       />
       <AppHelperText visible={touched[name]} message={errors[name]} />
