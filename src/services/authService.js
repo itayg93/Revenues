@@ -21,8 +21,11 @@ const handleLoginWithEmailAndPassword = async (email, password) => {
 const handleLoginWithGoogle = async () => {
   try {
     let response = await authApi.loginWithGoogle();
-    // create default user profile
-    await profileApi.createDefaultUserProfile(response.user.uid);
+    // check if its a new user
+    if (response.additionalUserInfo.isNewUser) {
+      // create default user profile
+      await profileApi.createDefaultUserProfile(response.user.uid);
+    }
     return {
       isSuccess: true,
       data: response.user,
