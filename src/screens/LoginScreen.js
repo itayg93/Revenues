@@ -1,6 +1,7 @@
 import React, {useState, useContext} from 'react';
 import {Alert, StyleSheet} from 'react-native';
 import * as Yup from 'yup';
+import {GoogleSigninButton} from '@react-native-google-signin/google-signin';
 
 import authService from '../services/authService';
 import authContext from '../auth/authContext';
@@ -21,7 +22,7 @@ const LoginScreen = () => {
 
   const [hidePassword, setHidePassword] = useState(true);
 
-  const handleLogin = async values => {
+  const handleLoginWithEmailAndPassword = async values => {
     setLoading(true);
     let response = await authService.handleLoginWithEmailAndPassword(
       values.email,
@@ -40,6 +41,16 @@ const LoginScreen = () => {
     setUser(response.data);
   };
 
+  const handleLoginWithGoogle = async () => {
+    let response = await authService.handleLoginWithGoogle();
+
+    // error
+    if (!response.isSuccess) return Alert.alert('Error', response.error);
+
+    // success
+    setUser(response.data);
+  };
+
   return (
     <AppScreen style={styles.contentContainer}>
       <AppForm
@@ -48,7 +59,7 @@ const LoginScreen = () => {
           password: '',
         }}
         validationSchema={validationSchema}
-        onSubmit={values => handleLogin(values)}>
+        onSubmit={values => handleLoginWithEmailAndPassword(values)}>
         {/** email */}
         <AppFormTextInput
           name="email"
@@ -70,6 +81,12 @@ const LoginScreen = () => {
         {/** submit */}
         <AppFormButton label="Login" loading={loading} />
       </AppForm>
+      <GoogleSigninButton
+        style={{width: 192, height: 48}}
+        size={GoogleSigninButton.Size.Wide}
+        color={GoogleSigninButton.Color.Dark}
+        onPress={handleLoginWithGoogle}
+      />
     </AppScreen>
   );
 };

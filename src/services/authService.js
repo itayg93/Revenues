@@ -1,7 +1,7 @@
 import authApi from '../api/authApi';
 import profileApi from '../api/profileApi';
 
-// login
+// login with email and password
 const handleLoginWithEmailAndPassword = async (email, password) => {
   try {
     let response = await authApi.loginWithEmailAndPassword(email, password);
@@ -10,6 +10,26 @@ const handleLoginWithEmailAndPassword = async (email, password) => {
       data: response.user,
     };
   } catch (err) {
+    return {
+      isSuccess: false,
+      error: err.message,
+    };
+  }
+};
+
+// login with google
+const handleLoginWithGoogle = async () => {
+  try {
+    let response = await authApi.loginWithGoogle();
+    // create default user profile
+    await profileApi.createDefaultUserProfile(response.user.uid);
+    return {
+      isSuccess: true,
+      data: response.user,
+    };
+  } catch (err) {
+    // delete the new user without name/default profile
+    await authApi.deleteCurrentUser();
     return {
       isSuccess: false,
       error: err.message,
@@ -76,6 +96,7 @@ const handleLogoutCurrentUser = async () => {
 
 export default {
   handleLoginWithEmailAndPassword,
+  handleLoginWithGoogle,
   handleGetCurrentUser,
   handleRegisterWithEmailAndPassword,
   handleLogoutCurrentUser,
