@@ -1,11 +1,29 @@
 import authApi from '../api/authApi';
+import profileApi from '../api/profileApi';
 
 // login
 const handleLoginWithEmailAndPassword = async (email, password) => {
   try {
-    await authApi.loginWithEmailAndPassword(email, password);
+    let response = await authApi.loginWithEmailAndPassword(email, password);
     return {
       isSuccess: true,
+      data: response.user,
+    };
+  } catch (err) {
+    return {
+      isSuccess: false,
+      error: err.message,
+    };
+  }
+};
+
+// get current user
+handleGetCurrentUser = () => {
+  try {
+    let response = authApi.getCurrentUser();
+    return {
+      isSuccess: true,
+      data: response,
     };
   } catch (err) {
     return {
@@ -23,9 +41,17 @@ const handleRegisterWithEmailAndPassword = async (name, email, password) => {
     await response.user.updateProfile({
       displayName: name,
     });
-    // TODO:
-    // create default profile
+    // get the updated profile
+    let updatedUser = authApi.getCurrentUser();
+    // create default user profile
+    await profileApi.createDefaultUserProfile(updatedUser.uid);
+    return {
+      isSuccess: true,
+      data: updatedUser,
+    };
   } catch (err) {
+    // delete the new user without name/default profile
+    await authApi.deleteCurrentUser();
     return {
       isSuccess: false,
       error: err.message,
@@ -34,9 +60,9 @@ const handleRegisterWithEmailAndPassword = async (name, email, password) => {
 };
 
 // logout
-const handleLogout = async () => {
+const handleLogoutCurrentUser = async () => {
   try {
-    await authApi.logout();
+    await authApi.logoutCurrentUser();
     return {
       isSuccess: true,
     };
@@ -50,6 +76,7 @@ const handleLogout = async () => {
 
 export default {
   handleLoginWithEmailAndPassword,
+  handleGetCurrentUser,
   handleRegisterWithEmailAndPassword,
-  handleLogout,
+  handleLogoutCurrentUser,
 };

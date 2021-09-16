@@ -20,14 +20,16 @@ const validationSchema = Yup.object().shape({
 });
 
 const AccountScreen = () => {
-  const {user} = useContext(authContext);
+  const {user, setUser} = useContext(authContext);
 
   const handleLogout = async () => {
-    let response = await authService.handleLogout();
+    let response = await authService.handleLogoutCurrentUser();
 
-    if (!response.isSuccess) {
-      Alert.alert('Error', response.error);
-    }
+    // error
+    if (!response.isSuccess) return Alert.alert('Error', response.error);
+
+    // success
+    setUser(null);
   };
 
   return (

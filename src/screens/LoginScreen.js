@@ -1,8 +1,9 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {Alert, StyleSheet} from 'react-native';
 import * as Yup from 'yup';
 
 import authService from '../services/authService';
+import authContext from '../auth/authContext';
 
 import defaultStyles from '../config/defaultStyles';
 import AppScreen from '../components/AppScreen';
@@ -14,6 +15,8 @@ const validationSchema = Yup.object().shape({
 });
 
 const LoginScreen = () => {
+  const {setUser} = useContext(authContext);
+
   const [loading, setLoading] = useState(false);
 
   const [hidePassword, setHidePassword] = useState(true);
@@ -25,10 +28,16 @@ const LoginScreen = () => {
       values.password,
     );
 
+    // error
     if (!response.isSuccess) {
       setLoading(false);
       Alert.alert('Error', response.error);
+      return;
     }
+
+    // success
+    setLoading(false);
+    setUser(response.data);
   };
 
   return (
