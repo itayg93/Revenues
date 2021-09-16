@@ -31,7 +31,7 @@ const handleLoginWithGoogle = async () => {
       data: response.user,
     };
   } catch (err) {
-    // delete the new user without name/default profile
+    // delete the new user without default profile
     await authApi.deleteCurrentUser();
     return {
       isSuccess: false,

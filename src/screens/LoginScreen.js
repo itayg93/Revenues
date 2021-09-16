@@ -1,5 +1,5 @@
 import React, {useState, useContext} from 'react';
-import {Alert, StyleSheet} from 'react-native';
+import {Alert, StyleSheet, View} from 'react-native';
 import * as Yup from 'yup';
 import {GoogleSigninButton} from '@react-native-google-signin/google-signin';
 
@@ -81,12 +81,14 @@ const LoginScreen = () => {
         {/** submit */}
         <AppFormButton label="Login" loading={loading} />
       </AppForm>
-      <GoogleSigninButton
-        style={{width: 192, height: 48}}
-        size={GoogleSigninButton.Size.Wide}
-        color={GoogleSigninButton.Color.Dark}
-        onPress={handleLoginWithGoogle}
-      />
+      <View style={styles.googleButtonContainer}>
+        <GoogleSigninButton
+          style={styles.googleButton}
+          size={GoogleSigninButton.Size.Wide}
+          color={GoogleSigninButton.Color.Dark}
+          onPress={handleLoginWithGoogle}
+        />
+      </View>
     </AppScreen>
   );
 };
@@ -96,5 +98,13 @@ export default LoginScreen;
 const styles = StyleSheet.create({
   contentContainer: {
     padding: defaultStyles.spacers.space10,
+  },
+  googleButtonContainer: {
+    flexDirection: 'row-reverse',
+    marginTop: defaultStyles.spacers.space10,
+  },
+  googleButton: {
+    width: 192,
+    height: 48,
   },
 });
