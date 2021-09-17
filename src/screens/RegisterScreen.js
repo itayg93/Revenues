@@ -16,7 +16,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const RegisterScreen = () => {
-  const {setUser} = useContext(authContext);
+  const {setUser, setUserProfile} = useContext(authContext);
 
   const [loading, setLoading] = useState(false);
 
@@ -39,7 +39,8 @@ const RegisterScreen = () => {
 
     // success
     setLoading(false);
-    setUser(response.data);
+    setUserProfile(response.data.userProfile);
+    setUser(response.data.user);
   };
 
   return (

@@ -9,8 +9,12 @@ const DEFAULT_USER_PROFILE = {
   commissionRate: 0,
   compulsoryInsurance: 0,
   collateralInsurance: 0,
-  personalInsurance: 0,
   timestamp: Date.now(),
+};
+
+// get default user profile
+const getDefaultUserProfile = () => {
+  return DEFAULT_USER_PROFILE;
 };
 
 // create default user profile
@@ -23,6 +27,18 @@ const createDefaultUserProfile = userId => {
     .set(DEFAULT_USER_PROFILE);
 };
 
+// get current user profile
+const getCurrentUserProfile = userId => {
+  return firestore()
+    .collection(USERS_DATA)
+    .doc(userId)
+    .collection(PROFILE)
+    .doc(USER_PROFILE)
+    .get();
+};
+
 export default {
+  getDefaultUserProfile,
   createDefaultUserProfile,
+  getCurrentUserProfile,
 };

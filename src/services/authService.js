@@ -1,84 +1,118 @@
 import authApi from '../api/authApi';
-import profileApi from '../api/profileApi';
+import profileService from './profileService';
 
 // login with email and password
 const handleLoginWithEmailAndPassword = async (email, password) => {
   try {
-    let response = await authApi.loginWithEmailAndPassword(email, password);
-    return {
-      isSuccess: true,
-      data: response.user,
-    };
+    // user
+    const authResponse = await authApi.loginWithEmailAndPassword(
+      email,
+      password,
+    );
+    // user profile
+    const profileResponse = await profileService.handleGetCurrentUserProfile(
+      authResponse.user.uid,
+    );
+    // user profile error
+    if (!profileResponse.isSuccess) return handleError(profileResponse.error);
+    // success
+    return handleSuccess({
+      user: authResponse.user,
+      userProfile: profileResponse.data,
+    });
   } catch (err) {
-    return {
-      isSuccess: false,
-      error: err.message,
-    };
+    return handleError(err.message);
   }
 };
 
 // login with google
 const handleLoginWithGoogle = async () => {
   try {
-    let response = await authApi.loginWithGoogle();
+    // user
+    const authResponse = await authApi.loginWithGoogle();
     // check if its a new user
-    if (response.additionalUserInfo.isNewUser) {
+    if (authResponse.additionalUserInfo.isNewUser) {
       // create default user profile
-      await profileApi.createDefaultUserProfile(response.user.uid);
+      const createProfileResponse =
+        await profileService.handleCreateDefaultUserProfile(
+          authResponse.user.uid,
+        );
+      // create default user profile error
+      if (!createProfileResponse.isSuccess)
+        return handleError(createProfileResponse.error);
+      // create default user profile success
+      return handleSuccess({
+        user: authResponse.user,
+        userProfile: profileService.handleGetDefaultUserProfile(),
+      });
     }
-    return {
-      isSuccess: true,
-      data: response.user,
-    };
+    const getProfileResponse = await profileService.handleGetCurrentUserProfile(
+      authResponse.user.uid,
+    );
+    // get user profile error
+    if (!getProfileResponse.isSuccess)
+      return handleError(getProfileResponse.error);
+    // get user profile success
+    return handleSuccess({
+      user: authResponse.user,
+      userProfile: getProfileResponse.data,
+    });
   } catch (err) {
-    // delete the new user without default profile
-    await authApi.deleteCurrentUser();
-    return {
-      isSuccess: false,
-      error: err.message,
-    };
+    // TODO: delete the new user if error occured when create default profile
+    return handleError(err.message);
   }
 };
 
-// get current user
-handleGetCurrentUser = () => {
+// get current user and user profile
+handleGetCurrentUserAndUserProfile = async () => {
   try {
-    let response = authApi.getCurrentUser();
-    return {
-      isSuccess: true,
-      data: response,
-    };
+    // user
+    const authResponse = authApi.getCurrentUser();
+    if (!authResponse) return null;
+    // user profile
+    const profileResponse = await profileService.handleGetCurrentUserProfile(
+      authResponse.uid,
+    );
+    // get user profile error
+    if (!profileResponse.isSuccess) return handleError(profileResponse.error);
+    // success
+    return handleSuccess({
+      user: authResponse,
+      userProfile: profileResponse.data,
+    });
   } catch (err) {
-    return {
-      isSuccess: false,
-      error: err.message,
-    };
+    return handleError(err.message);
   }
 };
 
 // register
 const handleRegisterWithEmailAndPassword = async (name, email, password) => {
   try {
-    let response = await authApi.registerWithEmailAndPassword(email, password);
+    const authResponse = await authApi.registerWithEmailAndPassword(
+      email,
+      password,
+    );
+    // FIXME:
     // update name
-    await response.user.updateProfile({
+    await authResponse.user.updateProfile({
       displayName: name,
     });
     // get the updated profile
-    let updatedUser = authApi.getCurrentUser();
+    const updatedUser = authApi.getCurrentUser();
     // create default user profile
-    await profileApi.createDefaultUserProfile(updatedUser.uid);
-    return {
-      isSuccess: true,
-      data: updatedUser,
-    };
+    const createProfileResponse =
+      await profileService.handleCreateDefaultUserProfile(updatedUser.uid);
+    // create default user profile error
+    if (!createProfileResponse.isSuccess)
+      return handleError(createProfileResponse.error);
+    // create default user profile success
+    return handleSuccess({
+      user: updatedUser,
+      userProfile: profileService.handleGetDefaultUserProfile(),
+    });
   } catch (err) {
-    // delete the new user without name/default profile
-    await authApi.deleteCurrentUser();
-    return {
-      isSuccess: false,
-      error: err.message,
-    };
+    // TODO: delete the new user if error occured when update the name or create default profile
+    return handleError(err.message);
   }
 };
 
@@ -86,21 +120,32 @@ const handleRegisterWithEmailAndPassword = async (name, email, password) => {
 const handleLogoutCurrentUser = async () => {
   try {
     await authApi.logoutCurrentUser();
-    return {
-      isSuccess: true,
-    };
+    return handleSuccess();
   } catch (err) {
-    return {
-      isSuccess: false,
-      error: err.message,
-    };
+    return handleError(err.message);
   }
+};
+
+// handle error
+const handleError = error => {
+  return {
+    isSuccess: false,
+    error,
+  };
+};
+
+// handle success
+const handleSuccess = (data = {}) => {
+  return {
+    isSuccess: true,
+    data,
+  };
 };
 
 export default {
   handleLoginWithEmailAndPassword,
   handleLoginWithGoogle,
-  handleGetCurrentUser,
+  handleGetCurrentUserAndUserProfile,
   handleRegisterWithEmailAndPassword,
   handleLogoutCurrentUser,
 };

@@ -21,7 +21,7 @@ const AppUserProfileCard = ({user, onLogoutPress}) => {
       <TouchableOpacity onPress={onLogoutPress}>
         <MaterialCommunityIcons
           name="logout"
-          size={30}
+          size={24}
           color={defaultStyles.colors.mediumGrey}
         />
       </TouchableOpacity>

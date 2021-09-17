@@ -10,27 +10,34 @@ import AuthNavigator from './src/navigation/AuthNavigator';
 
 const App = () => {
   const [initializing, setInitializing] = useState(true);
+
   const [user, setUser] = useState();
+  const [userProfile, setUserProfile] = useState({});
 
   useEffect(() => {
-    handleGetCurrentUser();
+    handleGetCurrentUserAndUserProfile();
   }, []);
 
-  const handleGetCurrentUser = async () => {
-    const response = await authService.handleGetCurrentUser();
+  const handleGetCurrentUserAndUserProfile = async () => {
+    const authResponse = await authService.handleGetCurrentUserAndUserProfile();
+    setInitializing(false);
+
+    if (!authResponse) return;
 
     // error
-    if (!response.isSuccess) return Alert.alert('Error', response.error);
+    if (!authResponse.isSuccess)
+      return Alert.alert('Error', authResponse.error);
 
     // success
-    setUser(response.data);
-    if (initializing) setInitializing(false);
+    setUserProfile(authResponse.data.userProfile);
+    setUser(authResponse.data.user);
   };
 
+  // FIXME:
   if (initializing) return null;
 
   return (
-    <authContext.Provider value={{user, setUser}}>
+    <authContext.Provider value={{user, setUser, userProfile, setUserProfile}}>
       <NavigationContainer>
         {user ? <AppNavigator /> : <AuthNavigator />}
       </NavigationContainer>

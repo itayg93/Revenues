@@ -35,16 +35,10 @@ const logoutCurrentUser = () => {
   return auth().signOut();
 };
 
-// delete
-const deleteCurrentUser = () => {
-  return getCurrentUser().delete();
-};
-
 export default {
   loginWithEmailAndPassword,
   loginWithGoogle,
   getCurrentUser,
   registerWithEmailAndPassword,
   logoutCurrentUser,
-  deleteCurrentUser,
 };

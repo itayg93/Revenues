@@ -16,39 +16,37 @@ const validationSchema = Yup.object().shape({
 });
 
 const LoginScreen = () => {
-  const {setUser} = useContext(authContext);
+  const {setUser, setUserProfile} = useContext(authContext);
 
   const [loading, setLoading] = useState(false);
 
   const [hidePassword, setHidePassword] = useState(true);
 
-  const handleLoginWithEmailAndPassword = async values => {
+  const handleLoginWithEmailAndPassword = async ({email, password}) => {
     setLoading(true);
-    let response = await authService.handleLoginWithEmailAndPassword(
-      values.email,
-      values.password,
+    const response = await authService.handleLoginWithEmailAndPassword(
+      email,
+      password,
     );
-
     // error
     if (!response.isSuccess) {
       setLoading(false);
       Alert.alert('Error', response.error);
       return;
     }
-
     // success
     setLoading(false);
-    setUser(response.data);
+    setUserProfile(response.data.userProfile);
+    setUser(response.data.user);
   };
 
   const handleLoginWithGoogle = async () => {
     let response = await authService.handleLoginWithGoogle();
-
     // error
     if (!response.isSuccess) return Alert.alert('Error', response.error);
-
     // success
-    setUser(response.data);
+    setUserProfile(response.data.userProfile);
+    setUser(response.data.user);
   };
 
   return (
