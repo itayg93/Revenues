@@ -1,4 +1,5 @@
 import profileApi from '../api/profileApi';
+import handlers from '../utils/handlers';
 
 // get default user profile
 const handleGetDefaultUserProfile = () => {
@@ -10,9 +11,9 @@ const handleCreateDefaultUserProfile = async userId => {
   try {
     await profileApi.createDefaultUserProfile(userId);
     // success
-    return handleSuccess();
+    return handlers.handleSuccess();
   } catch (err) {
-    return handleError(err.message);
+    return handlers.handleError(err.message);
   }
 };
 
@@ -21,28 +22,13 @@ const handleGetCurrentUserProfile = async userId => {
   try {
     const documentSnapshot = await profileApi.getCurrentUserProfile(userId);
     // error
-    if (!documentSnapshot.exists) return handleError('No user profile.');
+    if (!documentSnapshot.exists)
+      return handlers.handleError('No user profile.');
     // success
-    return handleSuccess({userProfile: documentSnapshot.data()});
+    return handlers.handleSuccess({userProfile: documentSnapshot.data()});
   } catch (err) {
-    return handleError(err.message);
+    return handlers.handleError(err.message);
   }
-};
-
-// handle error
-const handleError = error => {
-  return {
-    isSuccess: false,
-    error,
-  };
-};
-
-// handle success
-const handleSuccess = (data = {}) => {
-  return {
-    isSuccess: true,
-    data,
-  };
 };
 
 export default {

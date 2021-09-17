@@ -1,5 +1,6 @@
 import authApi from '../api/authApi';
 import profileService from './profileService';
+import handlers from '../utils/handlers';
 
 // login with email and password
 const handleLoginWithEmailAndPassword = async (email, password) => {
@@ -14,14 +15,15 @@ const handleLoginWithEmailAndPassword = async (email, password) => {
       authResponse.user.uid,
     );
     // user profile error
-    if (!profileResponse.isSuccess) return handleError(profileResponse.error);
+    if (!profileResponse.isSuccess)
+      return handlers.handleError(profileResponse.error);
     // success
-    return handleSuccess({
+    return handlers.handleSuccess({
       user: authResponse.user,
       userProfile: profileResponse.data,
     });
   } catch (err) {
-    return handleError(err.message);
+    return handlers.handleError(err.message);
   }
 };
 
@@ -39,9 +41,9 @@ const handleLoginWithGoogle = async () => {
         );
       // create default user profile error
       if (!createProfileResponse.isSuccess)
-        return handleError(createProfileResponse.error);
+        return handlers.handleError(createProfileResponse.error);
       // create default user profile success
-      return handleSuccess({
+      return handlers.handleSuccess({
         user: authResponse.user,
         userProfile: profileService.handleGetDefaultUserProfile(),
       });
@@ -51,15 +53,15 @@ const handleLoginWithGoogle = async () => {
     );
     // get user profile error
     if (!getProfileResponse.isSuccess)
-      return handleError(getProfileResponse.error);
+      return handlers.handleError(getProfileResponse.error);
     // get user profile success
-    return handleSuccess({
+    return handlers.handleSuccess({
       user: authResponse.user,
       userProfile: getProfileResponse.data,
     });
   } catch (err) {
     // TODO: delete the new user if error occured when create default profile
-    return handleError(err.message);
+    return handlers.handleError(err.message);
   }
 };
 
@@ -74,14 +76,15 @@ handleGetCurrentUserAndUserProfile = async () => {
       authResponse.uid,
     );
     // get user profile error
-    if (!profileResponse.isSuccess) return handleError(profileResponse.error);
+    if (!profileResponse.isSuccess)
+      return handlers.handleError(profileResponse.error);
     // success
-    return handleSuccess({
+    return handlers.handleSuccess({
       user: authResponse,
       userProfile: profileResponse.data,
     });
   } catch (err) {
-    return handleError(err.message);
+    return handlers.handleError(err.message);
   }
 };
 
@@ -104,15 +107,15 @@ const handleRegisterWithEmailAndPassword = async (name, email, password) => {
       await profileService.handleCreateDefaultUserProfile(updatedUser.uid);
     // create default user profile error
     if (!createProfileResponse.isSuccess)
-      return handleError(createProfileResponse.error);
+      return handlers.handleError(createProfileResponse.error);
     // create default user profile success
-    return handleSuccess({
+    return handlers.handleSuccess({
       user: updatedUser,
       userProfile: profileService.handleGetDefaultUserProfile(),
     });
   } catch (err) {
     // TODO: delete the new user if error occured when update the name or create default profile
-    return handleError(err.message);
+    return handlers.handleError(err.message);
   }
 };
 
@@ -120,26 +123,10 @@ const handleRegisterWithEmailAndPassword = async (name, email, password) => {
 const handleLogoutCurrentUser = async () => {
   try {
     await authApi.logoutCurrentUser();
-    return handleSuccess();
+    return handlers.handleSuccess();
   } catch (err) {
-    return handleError(err.message);
+    return handlers.handleError(err.message);
   }
-};
-
-// handle error
-const handleError = error => {
-  return {
-    isSuccess: false,
-    error,
-  };
-};
-
-// handle success
-const handleSuccess = (data = {}) => {
-  return {
-    isSuccess: true,
-    data,
-  };
 };
 
 export default {
