@@ -11,6 +11,11 @@ import LoadingScreen from './LoadingScreen';
 import AppScreen from '../components/AppScreen';
 import {AppForm, AppFormTextInput, AppFormButton} from '../components/form';
 
+const LOGIN_TYPES = {
+  EMAIL_PASSWORD: authService.handleLoginWithEmailAndPassword,
+  GOOGLE: authService.handleLoginWithGoogle,
+};
+
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label('Email'),
   password: Yup.string().required().min(6).label('Password'),
@@ -23,24 +28,10 @@ const LoginScreen = () => {
 
   const [hidePassword, setHidePassword] = useState(true);
 
-  const handleLoginWithEmailAndPassword = async ({email, password}) => {
+  const handleLogin = async (loginType, values) => {
     Keyboard.dismiss();
     setLoading(true);
-    const response = await authService.handleLoginWithEmailAndPassword(
-      email,
-      password,
-    );
-    setLoading(false);
-    // error
-    if (!response.isSuccess) return Alert.alert('Error', response.error);
-    // success
-    setUserProfile(response.data.userProfile);
-    setUser(response.data.user);
-  };
-
-  const handleLoginWithGoogle = async () => {
-    setLoading(true);
-    const response = await authService.handleLoginWithGoogle();
+    const response = await loginType(values);
     setLoading(false);
     // error
     if (!response.isSuccess) return Alert.alert('Error', response.error);
@@ -58,7 +49,7 @@ const LoginScreen = () => {
           password: '',
         }}
         validationSchema={validationSchema}
-        onSubmit={values => handleLoginWithEmailAndPassword(values)}>
+        onSubmit={values => handleLogin(LOGIN_TYPES.EMAIL_PASSWORD, values)}>
         {/** email */}
         <AppFormTextInput
           name="email"
@@ -86,7 +77,7 @@ const LoginScreen = () => {
           color={defaultStyles.colors.darkGrey}
           icon="google"
           mode="contained"
-          onPress={handleLoginWithGoogle}>
+          onPress={() => handleLogin(LOGIN_TYPES.GOOGLE)}>
           Login
         </Button>
       </View>

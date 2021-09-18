@@ -2,13 +2,21 @@ import authApi from '../api/authApi';
 import profileService from './profileService';
 import handlers from '../utils/handlers';
 
+const PROFILE_REQUESTS_TYPES = {
+  GET_USER_PROFILE: profileService.handleGetCurrentUserProfile,
+  CREATE_USER_PROFILE: profileService.handleCreateDefaultUserProfile,
+};
+
 // login with email and password
-const handleLoginWithEmailAndPassword = async (email, password) => {
+const handleLoginWithEmailAndPassword = async values => {
   try {
-    const {user} = await authApi.loginWithEmailAndPassword(email, password);
+    const {user} = await authApi.loginWithEmailAndPassword(
+      values.email,
+      values.password,
+    );
     // try to get current user profile
     return await handleRequestFromProfileService(
-      profileService.handleGetCurrentUserProfile,
+      PROFILE_REQUESTS_TYPES.GET_USER_PROFILE,
       user,
     );
   } catch (err) {
@@ -23,13 +31,13 @@ const handleLoginWithGoogle = async () => {
     if (additionalUserInfo.isNewUser) {
       // if new user try to create defualt user profile
       return await handleRequestFromProfileService(
-        profileService.handleCreateDefaultUserProfile,
+        PROFILE_REQUESTS_TYPES.CREATE_USER_PROFILE,
         user,
       );
     }
     // try to get current user profile
     return await handleRequestFromProfileService(
-      profileService.handleGetCurrentUserProfile,
+      PROFILE_REQUESTS_TYPES.GET_USER_PROFILE,
       user,
     );
   } catch (err) {
@@ -45,7 +53,7 @@ handleGetCurrentUserAndUserProfile = async () => {
     if (!user) return null;
     // try to get current user profile
     return await handleRequestFromProfileService(
-      profileService.handleGetCurrentUserProfile,
+      PROFILE_REQUESTS_TYPES.GET_USER_PROFILE,
       user,
     );
   } catch (err) {
@@ -63,7 +71,7 @@ const handleRegisterWithEmailAndPassword = async (name, email, password) => {
     });
     // try to create default profile
     return await handleRequestFromProfileService(
-      profileService.handleCreateDefaultUserProfile,
+      PROFILE_REQUESTS_TYPES.CREATE_USER_PROFILE,
       authApi.getCurrentUser(),
     );
   } catch (err) {
