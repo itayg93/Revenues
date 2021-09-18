@@ -7,7 +7,7 @@ const handleLoginWithEmailAndPassword = async (email, password) => {
   try {
     const {user} = await authApi.loginWithEmailAndPassword(email, password);
     // try to get current user profile
-    return await handleRequestFromService(
+    return await handleRequestFromProfileService(
       profileService.handleGetCurrentUserProfile,
       user,
     );
@@ -22,13 +22,13 @@ const handleLoginWithGoogle = async () => {
     const {user, additionalUserInfo} = await authApi.loginWithGoogle();
     if (additionalUserInfo.isNewUser) {
       // if new user try to create defualt user profile
-      return await handleRequestFromService(
+      return await handleRequestFromProfileService(
         profileService.handleCreateDefaultUserProfile,
         user,
       );
     }
     // try to get current user profile
-    return await handleRequestFromService(
+    return await handleRequestFromProfileService(
       profileService.handleGetCurrentUserProfile,
       user,
     );
@@ -44,7 +44,7 @@ handleGetCurrentUserAndUserProfile = async () => {
     const user = authApi.getCurrentUser();
     if (!user) return null;
     // try to get current user profile
-    return await handleRequestFromService(
+    return await handleRequestFromProfileService(
       profileService.handleGetCurrentUserProfile,
       user,
     );
@@ -62,7 +62,7 @@ const handleRegisterWithEmailAndPassword = async (name, email, password) => {
       displayName: name,
     });
     // try to create default profile
-    return await handleRequestFromService(
+    return await handleRequestFromProfileService(
       profileService.handleCreateDefaultUserProfile,
       authApi.getCurrentUser(),
     );
@@ -83,10 +83,10 @@ const handleLogoutCurrentUser = async () => {
   }
 };
 
-// handle request from service
-const handleRequestFromService = async (serviceDotrequest, user) => {
+// handle request from profile service
+const handleRequestFromProfileService = async (request, user) => {
   try {
-    const response = await serviceDotrequest(user.uid);
+    const response = await request(user.uid);
     // error
     if (!response.isSuccess) return handlers.handleError(response.error);
     // success
