@@ -7,6 +7,7 @@ import authContext from './src/auth/authContext';
 
 import AppNavigator from './src/navigation/AppNavigator';
 import AuthNavigator from './src/navigation/AuthNavigator';
+import InitializingScreen from './src/screens/InitializingScreen';
 
 const App = () => {
   const [initializing, setInitializing] = useState(true);
@@ -30,8 +31,7 @@ const App = () => {
     setUser(response.data.user);
   };
 
-  // FIXME:
-  if (initializing) return null;
+  if (initializing) return <InitializingScreen />;
 
   return (
     <authContext.Provider value={{user, setUser, userProfile, setUserProfile}}>

@@ -23,6 +23,7 @@ const WelcomeScreen = ({navigation}) => {
         {/** register */}
         <Button
           mode="contained"
+          color={defaultStyles.colors.darkGrey}
           onPress={() => navigation.navigate(routes.REGISTER_SCREEN)}>
           Register
         </Button>

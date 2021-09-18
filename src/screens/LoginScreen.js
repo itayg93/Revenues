@@ -1,7 +1,7 @@
 import React, {useState, useContext} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
+import {Button} from 'react-native-paper';
 import * as Yup from 'yup';
-import {GoogleSigninButton} from '@react-native-google-signin/google-signin';
 
 import authService from '../services/authService';
 import authContext from '../auth/authContext';
@@ -19,6 +19,7 @@ const LoginScreen = () => {
   const {setUser, setUserProfile} = useContext(authContext);
 
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const [hidePassword, setHidePassword] = useState(true);
 
@@ -28,20 +29,18 @@ const LoginScreen = () => {
       email,
       password,
     );
-    // error
-    if (!response.isSuccess) {
-      setLoading(false);
-      Alert.alert('Error', response.error);
-      return;
-    }
-    // success
     setLoading(false);
+    // error
+    if (!response.isSuccess) return Alert.alert('Error', response.error);
+    // success
     setUserProfile(response.data.userProfile);
     setUser(response.data.user);
   };
 
   const handleLoginWithGoogle = async () => {
+    setGoogleLoading(true);
     const response = await authService.handleLoginWithGoogle();
+    setGoogleLoading(false);
     // error
     if (!response.isSuccess) return Alert.alert('Error', response.error);
     // success
@@ -81,12 +80,14 @@ const LoginScreen = () => {
       </AppForm>
       {/** google button */}
       <View style={styles.googleButtonContainer}>
-        <GoogleSigninButton
-          style={styles.googleButton}
-          size={GoogleSigninButton.Size.Wide}
-          color={GoogleSigninButton.Color.Dark}
-          onPress={handleLoginWithGoogle}
-        />
+        <Button
+          color={defaultStyles.colors.darkGrey}
+          icon="google"
+          mode="contained"
+          loading={googleLoading}
+          onPress={handleLoginWithGoogle}>
+          Login
+        </Button>
       </View>
     </AppScreen>
   );
@@ -99,11 +100,6 @@ const styles = StyleSheet.create({
     padding: defaultStyles.spacers.space10,
   },
   googleButtonContainer: {
-    flexDirection: 'row-reverse',
     marginTop: defaultStyles.spacers.space10,
-  },
-  googleButton: {
-    width: 192,
-    height: 48,
   },
 });
