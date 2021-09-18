@@ -5,7 +5,7 @@ import {useFormikContext} from 'formik';
 
 import defaultStyles from '../../config/defaultStyles';
 
-const AppFormButton = ({loading, label = 'Submit'}) => {
+const AppFormButton = ({loading = false, label = 'Submit'}) => {
   const {handleSubmit} = useFormikContext();
   return (
     <Button

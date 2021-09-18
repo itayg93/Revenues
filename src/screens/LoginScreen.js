@@ -1,12 +1,13 @@
 import React, {useState, useContext} from 'react';
-import {Alert, StyleSheet, View} from 'react-native';
-import {Button} from 'react-native-paper';
+import {Keyboard, Alert, StyleSheet, View} from 'react-native';
+import {Portal, Button} from 'react-native-paper';
 import * as Yup from 'yup';
 
 import authService from '../services/authService';
 import authContext from '../auth/authContext';
 
 import defaultStyles from '../config/defaultStyles';
+import LoadingScreen from './LoadingScreen';
 import AppScreen from '../components/AppScreen';
 import {AppForm, AppFormTextInput, AppFormButton} from '../components/form';
 
@@ -19,11 +20,11 @@ const LoginScreen = () => {
   const {setUser, setUserProfile} = useContext(authContext);
 
   const [loading, setLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
 
   const [hidePassword, setHidePassword] = useState(true);
 
   const handleLoginWithEmailAndPassword = async ({email, password}) => {
+    Keyboard.dismiss();
     setLoading(true);
     const response = await authService.handleLoginWithEmailAndPassword(
       email,
@@ -38,9 +39,9 @@ const LoginScreen = () => {
   };
 
   const handleLoginWithGoogle = async () => {
-    setGoogleLoading(true);
+    setLoading(true);
     const response = await authService.handleLoginWithGoogle();
-    setGoogleLoading(false);
+    setLoading(false);
     // error
     if (!response.isSuccess) return Alert.alert('Error', response.error);
     // success
@@ -50,6 +51,7 @@ const LoginScreen = () => {
 
   return (
     <AppScreen style={styles.contentContainer}>
+      <Portal>{loading && <LoadingScreen />}</Portal>
       <AppForm
         initialValues={{
           email: '',
@@ -76,7 +78,7 @@ const LoginScreen = () => {
           secureTextEntry={hidePassword}
         />
         {/** submit */}
-        <AppFormButton label="Login" loading={loading} />
+        <AppFormButton label="Login" />
       </AppForm>
       {/** google button */}
       <View style={styles.googleButtonContainer}>
@@ -84,7 +86,6 @@ const LoginScreen = () => {
           color={defaultStyles.colors.darkGrey}
           icon="google"
           mode="contained"
-          loading={googleLoading}
           onPress={handleLoginWithGoogle}>
           Login
         </Button>

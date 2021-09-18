@@ -1,13 +1,13 @@
 import React from 'react';
 import {StyleSheet, View, TouchableOpacity} from 'react-native';
-import {Avatar, Title, Caption} from 'react-native-paper';
+import {Surface, Avatar, Title, Caption} from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import defaultStyles from '../config/defaultStyles';
 
 const AppUserProfileCard = ({user, onLogoutPress}) => {
   return (
-    <View style={styles.container}>
+    <Surface style={styles.container}>
       {/** avatar */}
       <View style={styles.avatarContainer}>
         <Avatar.Text label={user.displayName[0]} />
@@ -25,7 +25,7 @@ const AppUserProfileCard = ({user, onLogoutPress}) => {
           color={defaultStyles.colors.mediumGrey}
         />
       </TouchableOpacity>
-    </View>
+    </Surface>
   );
 };
 
@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
     padding: defaultStyles.spacers.space10,
     marginBottom: defaultStyles.spacers.space10,
     borderRadius: 10,
+    elevation: 2,
   },
   avatarContainer: {},
   userDetailsContainer: {

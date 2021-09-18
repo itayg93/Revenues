@@ -1,5 +1,5 @@
 import React, {useState, useContext} from 'react';
-import {Alert, StyleSheet} from 'react-native';
+import {Keyboard, Alert, StyleSheet} from 'react-native';
 import * as Yup from 'yup';
 
 import authService from '../services/authService';
@@ -23,20 +23,17 @@ const RegisterScreen = () => {
   const [hidePassword, setHidePassword] = useState(true);
 
   const handleRegister = async values => {
+    Keyboard.dismiss();
     setLoading(true);
     const response = await authService.handleRegisterWithEmailAndPassword(
       values.name,
       values.email,
       values.password,
     );
-    // error
-    if (!response.isSuccess) {
-      setLoading(false);
-      Alert.alert('Error', response.error);
-      return;
-    }
-    // success
     setLoading(false);
+    // error
+    if (!response.isSuccess) return Alert.alert('Error', response.error);
+    // success
     setUserProfile(response.data.userProfile);
     setUser(response.data.user);
   };

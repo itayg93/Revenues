@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Alert} from 'react-native';
+import {Provider} from 'react-native-paper';
 import {NavigationContainer} from '@react-navigation/native';
 
 import authService from './src/services/authService';
@@ -7,7 +8,6 @@ import authContext from './src/auth/authContext';
 
 import AppNavigator from './src/navigation/AppNavigator';
 import AuthNavigator from './src/navigation/AuthNavigator';
-import InitializingScreen from './src/screens/InitializingScreen';
 
 const App = () => {
   const [initializing, setInitializing] = useState(true);
@@ -31,14 +31,17 @@ const App = () => {
     setUser(response.data.user);
   };
 
-  if (initializing) return <InitializingScreen />;
+  if (initializing) return null;
 
   return (
-    <authContext.Provider value={{user, setUser, userProfile, setUserProfile}}>
-      <NavigationContainer>
-        {user ? <AppNavigator /> : <AuthNavigator />}
-      </NavigationContainer>
-    </authContext.Provider>
+    <Provider>
+      <authContext.Provider
+        value={{user, setUser, userProfile, setUserProfile}}>
+        <NavigationContainer>
+          {user ? <AppNavigator /> : <AuthNavigator />}
+        </NavigationContainer>
+      </authContext.Provider>
+    </Provider>
   );
 };
 
