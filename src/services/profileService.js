@@ -11,7 +11,7 @@ const handleCreateDefaultUserProfile = async userId => {
   try {
     await profileApi.createDefaultUserProfile(userId);
     // success
-    return handlers.handleSuccess();
+    return handlers.handleSuccess(handleGetDefaultUserProfile());
   } catch (err) {
     return handlers.handleError(err.message);
   }
