@@ -5,8 +5,8 @@ const PROFILE = 'PROFILE';
 const USER_PROFILE = 'USER_PROFILE';
 
 const DEFAULT_USER_PROFILE = {
-  taxPoints: 0,
-  commissionRate: 0,
+  taxPoints: 2.25,
+  commissionRate: 5,
   compulsoryInsurance: 0,
   collateralInsurance: 0,
   timestamp: Date.now(),
