@@ -24,19 +24,17 @@ const RegisterScreen = () => {
 
   const handleRegister = async values => {
     setLoading(true);
-    let response = await authService.handleRegisterWithEmailAndPassword(
+    const response = await authService.handleRegisterWithEmailAndPassword(
       values.name,
       values.email,
       values.password,
     );
-
     // error
     if (!response.isSuccess) {
       setLoading(false);
       Alert.alert('Error', response.error);
       return;
     }
-
     // success
     setLoading(false);
     setUserProfile(response.data.userProfile);

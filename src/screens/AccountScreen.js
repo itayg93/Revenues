@@ -22,7 +22,7 @@ const AccountScreen = () => {
   const {user, setUser, setUserProfile} = useContext(authContext);
 
   const handleLogout = async () => {
-    let response = await authService.handleLogoutCurrentUser();
+    const response = await authService.handleLogoutCurrentUser();
     // error
     if (!response.isSuccess) return Alert.alert('Error', response.error);
     // success
@@ -32,6 +32,7 @@ const AccountScreen = () => {
 
   return (
     <AppScreen style={styles.contentContainer}>
+      {/** profile card */}
       <AppUserProfileCard user={user} onLogoutPress={handleLogout} />
       <ScrollView>
         <AppForm

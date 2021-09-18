@@ -41,7 +41,7 @@ const LoginScreen = () => {
   };
 
   const handleLoginWithGoogle = async () => {
-    let response = await authService.handleLoginWithGoogle();
+    const response = await authService.handleLoginWithGoogle();
     // error
     if (!response.isSuccess) return Alert.alert('Error', response.error);
     // success
@@ -79,6 +79,7 @@ const LoginScreen = () => {
         {/** submit */}
         <AppFormButton label="Login" loading={loading} />
       </AppForm>
+      {/** google button */}
       <View style={styles.googleButtonContainer}>
         <GoogleSigninButton
           style={styles.googleButton}

@@ -19,18 +19,15 @@ const App = () => {
   }, []);
 
   const handleGetCurrentUserAndUserProfile = async () => {
-    const authResponse = await authService.handleGetCurrentUserAndUserProfile();
+    const response = await authService.handleGetCurrentUserAndUserProfile();
     setInitializing(false);
-
-    if (!authResponse) return;
-
+    // null
+    if (!response) return;
     // error
-    if (!authResponse.isSuccess)
-      return Alert.alert('Error', authResponse.error);
-
+    if (!response.isSuccess) return Alert.alert('Error', response.error);
     // success
-    setUserProfile(authResponse.data.userProfile);
-    setUser(authResponse.data.user);
+    setUserProfile(response.data.userProfile);
+    setUser(response.data.user);
   };
 
   // FIXME:
