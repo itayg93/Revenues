@@ -55,7 +55,7 @@ const LoginScreen = () => {
         {/** email */}
         <AppFormTextInput
           name="email"
-          placeholder="Email"
+          label="Email"
           autoCapitalize="none"
           autoCorrect={false}
           keyboardType="email-address"
@@ -63,7 +63,7 @@ const LoginScreen = () => {
         {/** password */}
         <AppFormTextInput
           name="password"
-          placeholder="Password"
+          label="Password"
           icon="eye"
           onIconPress={() => setHidePassword(!hidePassword)}
           autoCapitalize="none"

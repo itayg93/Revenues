@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {StyleSheet, ScrollView} from 'react-native';
+import {StyleSheet, ScrollView, Keyboard} from 'react-native';
 import {Headline} from 'react-native-paper';
 import * as Yup from 'yup';
 
@@ -19,7 +19,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const AccountScreen = () => {
-  const {user, setUser, setUserProfile} = useContext(authContext);
+  const {user, setUser, userProfile, setUserProfile} = useContext(authContext);
 
   const handleLogout = async () => {
     const response = await authService.handleLogoutCurrentUser();
@@ -28,6 +28,10 @@ const AccountScreen = () => {
     // success
     setUserProfile();
     setUser(null);
+  };
+
+  const handleSubmit = async values => {
+    console.log(values);
   };
 
   return (
@@ -43,17 +47,20 @@ const AccountScreen = () => {
             collateralInsurance: '',
           }}
           validationSchema={validationSchema}
-          onSubmit={values => console.log(values)}>
+          onSubmit={values => {
+            Keyboard.dismiss();
+            handleSubmit(values);
+          }}>
           {/** tax */}
           <AppFormTextInput
             name="taxPoints"
-            placeholder="Tax Points"
+            label="Tax Points"
             keyboardType="numeric"
           />
           {/** commission */}
           <AppFormTextInput
             name="commissionRate"
-            placeholder="Commission Rate"
+            label="Commission Rate"
             keyboardType="numeric"
           />
           {/** insurances */}
@@ -61,13 +68,13 @@ const AccountScreen = () => {
           {/** compulsory */}
           <AppFormTextInput
             name="compulsoryInsurance"
-            placeholder="Compulsory "
+            label="Compulsory "
             keyboardType="numeric"
           />
           {/** collateral */}
           <AppFormTextInput
             name="collateralInsurance"
-            placeholder="Collateral "
+            label="Collateral "
             keyboardType="numeric"
           />
           {/** submit */}

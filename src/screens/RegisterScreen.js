@@ -55,11 +55,11 @@ const RegisterScreen = () => {
           handleRegister(values);
         }}>
         {/** name */}
-        <AppFormTextInput name="name" placeholder="Name" autoCorrect={false} />
+        <AppFormTextInput name="name" label="Name" autoCorrect={false} />
         {/** email */}
         <AppFormTextInput
           name="email"
-          placeholder="Email"
+          label="Email"
           autoCapitalize="none"
           autoCorrect={false}
           keyboardType="email-address"
@@ -67,7 +67,7 @@ const RegisterScreen = () => {
         {/** password */}
         <AppFormTextInput
           name="password"
-          placeholder="Password"
+          label="Password"
           icon="eye"
           onIconPress={() => setHidePassword(!hidePassword)}
           autoCapitalize="none"

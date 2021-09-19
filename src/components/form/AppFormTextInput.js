@@ -6,13 +6,7 @@ import {useFormikContext} from 'formik';
 import defaultStyles from '../../config/defaultStyles';
 import AppHelperText from '../AppHelperText';
 
-const AppFormTextInput = ({
-  name,
-  placeholder,
-  icon,
-  onIconPress,
-  ...otherProps
-}) => {
+const AppFormTextInput = ({name, label, icon, onIconPress, ...otherProps}) => {
   const {values, handleChange, handleBlur, touched, errors} =
     useFormikContext();
   return (
@@ -20,7 +14,7 @@ const AppFormTextInput = ({
       <TextInput
         style={styles.textInput}
         name={name}
-        placeholder={placeholder}
+        label={label}
         value={values[name]}
         onChangeText={handleChange(name)}
         onBlur={handleBlur(name)}
