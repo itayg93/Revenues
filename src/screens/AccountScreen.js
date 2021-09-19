@@ -19,7 +19,7 @@ import AppUserProfileCard from '../components/AppUserProfileCard';
 import {AppForm, AppFormTextInput, AppFormButton} from '../components/form';
 import AppHelperText from '../components/AppHelperText';
 
-const HELPER_TEXT_AFFIX = 'Current: ';
+const HELPER_TEXT_PREFIX = 'Current: ';
 const PERCENTAGE = '%';
 const INS = '₪';
 
@@ -76,7 +76,7 @@ const AccountScreen = () => {
               />
               <AppHelperText
                 style={styles.helperText}
-                message={`${HELPER_TEXT_AFFIX}${userProfile.taxPoints}`}
+                message={`${HELPER_TEXT_PREFIX}${userProfile.taxPoints}`}
               />
               {/** commission */}
               <AppFormTextInput
@@ -86,7 +86,7 @@ const AccountScreen = () => {
               />
               <AppHelperText
                 style={styles.helperText}
-                message={`${HELPER_TEXT_AFFIX}${userProfile.commissionRate}${PERCENTAGE}`}
+                message={`${HELPER_TEXT_PREFIX}${userProfile.commissionRate}${PERCENTAGE}`}
               />
               {/** insurances */}
               <Headline style={styles.headline}>Insurances</Headline>
@@ -98,7 +98,7 @@ const AccountScreen = () => {
               />
               <AppHelperText
                 style={styles.helperText}
-                message={`${HELPER_TEXT_AFFIX}${userProfile.compulsoryInsurance}${INS}`}
+                message={`${HELPER_TEXT_PREFIX}${userProfile.compulsoryInsurance}${INS}`}
               />
               {/** collateral */}
               <AppFormTextInput
@@ -108,7 +108,7 @@ const AccountScreen = () => {
               />
               <AppHelperText
                 style={styles.helperText}
-                message={`${HELPER_TEXT_AFFIX}${userProfile.collateralInsurance}${INS}`}
+                message={`${HELPER_TEXT_PREFIX}${userProfile.collateralInsurance}${INS}`}
               />
               {/** submit */}
               <AppFormButton />
