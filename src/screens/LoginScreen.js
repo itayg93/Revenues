@@ -29,7 +29,6 @@ const LoginScreen = () => {
   const [hidePassword, setHidePassword] = useState(true);
 
   const handleLogin = async (loginType, values) => {
-    Keyboard.dismiss();
     setLoading(true);
     const response = await loginType(values);
     setLoading(false);
@@ -49,7 +48,10 @@ const LoginScreen = () => {
           password: '',
         }}
         validationSchema={validationSchema}
-        onSubmit={values => handleLogin(LOGIN_TYPES.EMAIL_PASSWORD, values)}>
+        onSubmit={values => {
+          Keyboard.dismiss();
+          handleLogin(LOGIN_TYPES.EMAIL_PASSWORD, values);
+        }}>
         {/** email */}
         <AppFormTextInput
           name="email"

@@ -1,13 +1,16 @@
 import React, {useState, useContext} from 'react';
 import {Keyboard, Alert, StyleSheet} from 'react-native';
+import {Portal} from 'react-native-paper';
 import * as Yup from 'yup';
 
 import authService from '../services/authService';
 import authContext from '../auth/authContext';
 
 import defaultStyles from '../config/defaultStyles';
+import LoadingScreen from './LoadingScreen';
 import AppScreen from '../components/AppScreen';
 import {AppForm, AppFormTextInput, AppFormButton} from '../components/form';
+import LoginScreen from './LoginScreen';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label('Name'),
@@ -23,7 +26,6 @@ const RegisterScreen = () => {
   const [hidePassword, setHidePassword] = useState(true);
 
   const handleRegister = async values => {
-    Keyboard.dismiss();
     setLoading(true);
     const response = await authService.handleRegisterWithEmailAndPassword(
       values.name,
@@ -40,6 +42,7 @@ const RegisterScreen = () => {
 
   return (
     <AppScreen style={styles.contentContainer}>
+      <Portal>{loading && <LoadingScreen />}</Portal>
       <AppForm
         initialValues={{
           name: '',
@@ -47,7 +50,10 @@ const RegisterScreen = () => {
           password: '',
         }}
         validationSchema={validationSchema}
-        onSubmit={values => handleRegister(values)}>
+        onSubmit={values => {
+          Keyboard.dismiss();
+          handleRegister(values);
+        }}>
         {/** name */}
         <AppFormTextInput name="name" placeholder="Name" autoCorrect={false} />
         {/** email */}
@@ -69,7 +75,7 @@ const RegisterScreen = () => {
           secureTextEntry={hidePassword}
         />
         {/** submit */}
-        <AppFormButton label="Register" loading={loading} />
+        <AppFormButton label="Register" />
       </AppForm>
     </AppScreen>
   );
