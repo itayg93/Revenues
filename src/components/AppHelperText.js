@@ -4,12 +4,12 @@ import {HelperText} from 'react-native-paper';
 
 import defaultStyles from '../config/defaultStyles';
 
-const AppHelperText = ({type = 'error', visible, message}) => {
+const AppHelperText = ({type = 'info', visible = true, message, style}) => {
   if (!visible || !message) return null;
   return (
     <View>
       <HelperText
-        style={styles.helperText}
+        style={[styles.helperText, style]}
         padding="none"
         type={type}
         visible={visible}>

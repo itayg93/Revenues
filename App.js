@@ -13,7 +13,7 @@ const App = () => {
   const [initializing, setInitializing] = useState(true);
 
   const [user, setUser] = useState();
-  const [userProfile, setUserProfile] = useState({});
+  const [userProfile, setUserProfile] = useState();
 
   useEffect(() => {
     handleGetCurrentUserAndUserProfile();

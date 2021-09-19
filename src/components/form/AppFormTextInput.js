@@ -29,7 +29,11 @@ const AppFormTextInput = ({name, label, icon, onIconPress, ...otherProps}) => {
         }
         {...otherProps}
       />
-      <AppHelperText visible={touched[name]} message={errors[name]} />
+      <AppHelperText
+        type="error"
+        visible={touched[name]}
+        message={errors[name]}
+      />
     </>
   );
 };

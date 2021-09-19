@@ -25,7 +25,7 @@ const handleGetCurrentUserProfile = async userId => {
     if (!documentSnapshot.exists)
       return handlers.handleError('No user profile.');
     // success
-    return handlers.handleSuccess({userProfile: documentSnapshot.data()});
+    return handlers.handleSuccess(documentSnapshot.data());
   } catch (err) {
     return handlers.handleError(err.message);
   }
