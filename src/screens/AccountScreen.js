@@ -1,5 +1,12 @@
-import React, {useContext, useEffect} from 'react';
-import {StyleSheet, ScrollView, Keyboard} from 'react-native';
+import React, {useContext} from 'react';
+import {
+  KeyboardAvoidingView,
+  StyleSheet,
+  Platform,
+  Keyboard,
+  ScrollView,
+  View,
+} from 'react-native';
 import {Headline} from 'react-native-paper';
 import * as Yup from 'yup';
 
@@ -13,6 +20,8 @@ import {AppForm, AppFormTextInput, AppFormButton} from '../components/form';
 import AppHelperText from '../components/AppHelperText';
 
 const HELPER_TEXT_AFFIX = 'Current: ';
+const PERCENTAGE = '%';
+const INS = '₪';
 
 const validationSchema = Yup.object().shape({
   taxPoints: Yup.number(),
@@ -22,13 +31,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const AccountScreen = () => {
-  const {user, setUser, setUserProfile, userProfile} = useContext(authContext);
-
-  useEffect(() => {
-    return () => {
-      setUserProfile();
-    };
-  }, []);
+  const {user, setUser, userProfile} = useContext(authContext);
 
   const handleLogout = async () => {
     const response = await authService.handleLogoutCurrentUser();
@@ -43,77 +46,92 @@ const AccountScreen = () => {
   };
 
   return (
-    <AppScreen style={styles.contentContainer}>
-      {/** profile card */}
-      <AppUserProfileCard user={user} onLogoutPress={handleLogout} />
-      <ScrollView>
-        <AppForm
-          initialValues={{
-            taxPoints: '',
-            commissionRate: '',
-            compulsoryInsurance: '',
-            collateralInsurance: '',
-          }}
-          validationSchema={validationSchema}
-          onSubmit={values => {
-            Keyboard.dismiss();
-            handleSubmit(values);
-          }}>
-          {/** tax */}
-          <AppFormTextInput
-            name="taxPoints"
-            label="Tax Points"
-            keyboardType="numeric"
-          />
-          <AppHelperText
-            style={styles.helperText}
-            message={`${HELPER_TEXT_AFFIX}${userProfile.taxPoints}`}
-          />
-          {/** commission */}
-          <AppFormTextInput
-            name="commissionRate"
-            label="Commission Rate"
-            keyboardType="numeric"
-          />
-          <AppHelperText
-            style={styles.helperText}
-            message={`${HELPER_TEXT_AFFIX}${userProfile.commissionRate}`}
-          />
-          {/** insurances */}
-          <Headline style={styles.headline}>Insurances</Headline>
-          {/** compulsory */}
-          <AppFormTextInput
-            name="compulsoryInsurance"
-            label="Compulsory "
-            keyboardType="numeric"
-          />
-          <AppHelperText
-            style={styles.helperText}
-            message={`${HELPER_TEXT_AFFIX}${userProfile.compulsoryInsurance}`}
-          />
-          {/** collateral */}
-          <AppFormTextInput
-            name="collateralInsurance"
-            label="Collateral "
-            keyboardType="numeric"
-          />
-          <AppHelperText
-            style={styles.helperText}
-            message={`${HELPER_TEXT_AFFIX}${userProfile.collateralInsurance}`}
-          />
-          {/** submit */}
-          <AppFormButton />
-        </AppForm>
-      </ScrollView>
-    </AppScreen>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}>
+      <AppScreen>
+        {/** profile card */}
+        <View style={styles.userProfileCardContainer}>
+          <AppUserProfileCard user={user} onLogoutPress={handleLogout} />
+        </View>
+        <ScrollView>
+          <View style={styles.appFormContainer}>
+            <AppForm
+              initialValues={{
+                taxPoints: '',
+                commissionRate: '',
+                compulsoryInsurance: '',
+                collateralInsurance: '',
+              }}
+              validationSchema={validationSchema}
+              onSubmit={values => {
+                Keyboard.dismiss();
+                handleSubmit(values);
+              }}>
+              {/** tax */}
+              <AppFormTextInput
+                name="taxPoints"
+                label="Tax Points"
+                keyboardType="numeric"
+              />
+              <AppHelperText
+                style={styles.helperText}
+                message={`${HELPER_TEXT_AFFIX}${userProfile.taxPoints}`}
+              />
+              {/** commission */}
+              <AppFormTextInput
+                name="commissionRate"
+                label="Commission Rate"
+                keyboardType="numeric"
+              />
+              <AppHelperText
+                style={styles.helperText}
+                message={`${HELPER_TEXT_AFFIX}${userProfile.commissionRate}${PERCENTAGE}`}
+              />
+              {/** insurances */}
+              <Headline style={styles.headline}>Insurances</Headline>
+              {/** compulsory */}
+              <AppFormTextInput
+                name="compulsoryInsurance"
+                label="Compulsory "
+                keyboardType="numeric"
+              />
+              <AppHelperText
+                style={styles.helperText}
+                message={`${HELPER_TEXT_AFFIX}${userProfile.compulsoryInsurance}${INS}`}
+              />
+              {/** collateral */}
+              <AppFormTextInput
+                name="collateralInsurance"
+                label="Collateral "
+                keyboardType="numeric"
+              />
+              <AppHelperText
+                style={styles.helperText}
+                message={`${HELPER_TEXT_AFFIX}${userProfile.collateralInsurance}${INS}`}
+              />
+              {/** submit */}
+              <AppFormButton />
+            </AppForm>
+          </View>
+        </ScrollView>
+      </AppScreen>
+    </KeyboardAvoidingView>
   );
 };
 
 export default AccountScreen;
 
 const styles = StyleSheet.create({
-  contentContainer: {
+  container: {
+    flex: 1,
+  },
+  userProfileCardContainer: {
     padding: defaultStyles.spacers.space10,
+  },
+  appFormContainer: {
+    paddingHorizontal: defaultStyles.spacers.space10,
+    marginBottom: defaultStyles.spacers.space10,
   },
   headline: {
     marginBottom: defaultStyles.spacers.space5,
