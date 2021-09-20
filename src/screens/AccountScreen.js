@@ -52,6 +52,8 @@ const AccountScreen = () => {
       values,
     );
     setLoading(false);
+    // null
+    if (!response) return;
     // error
     if (!response.isSuccess) return Alert.alert('Error', response.error);
     // success

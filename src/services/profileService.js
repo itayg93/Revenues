@@ -37,6 +37,7 @@ const handleUpdateCurrentUserProfile = async (userId, values) => {
     Object.entries(values).forEach(([key, value]) => {
       if (value !== '') updatedValues[key] = parseFloat(value);
     });
+    if (Object.keys(updatedValues).length === 1) return;
     await profileApi.updateCurrentUserProfile(userId, updatedValues);
     // success
     return await handleGetCurrentUserProfile(userId);
