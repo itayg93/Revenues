@@ -116,6 +116,7 @@ const AccountScreen = () => {
                   <AppHelperText
                     style={styles.helperText}
                     message={`${constants.HELPER_TEXT_PREFIX}${userProfile.taxPoints}`}
+                    visible
                   />
                 </View>
                 {/** commission */}
@@ -128,6 +129,7 @@ const AccountScreen = () => {
                   <AppHelperText
                     style={styles.helperText}
                     message={`${constants.HELPER_TEXT_PREFIX}${userProfile.commissionRate}${constants.PERCENTAGE}`}
+                    visible
                   />
                 </View>
               </View>
@@ -146,6 +148,7 @@ const AccountScreen = () => {
                   <AppHelperText
                     style={styles.helperText}
                     message={`${constants.HELPER_TEXT_PREFIX}${userProfile.compulsoryInsurance}${constants.INS}`}
+                    visible
                   />
                 </View>
                 {/** collateral */}
@@ -158,6 +161,7 @@ const AccountScreen = () => {
                   <AppHelperText
                     style={styles.helperText}
                     message={`${constants.HELPER_TEXT_PREFIX}${userProfile.collateralInsurance}${constants.INS}`}
+                    visible
                   />
                 </View>
               </View>
