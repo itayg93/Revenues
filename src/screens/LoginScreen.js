@@ -1,11 +1,13 @@
 import React, {useState, useContext} from 'react';
-import {Keyboard, Alert, StyleSheet, View} from 'react-native';
+import {Keyboard, StyleSheet, View} from 'react-native';
 import {Portal, Button} from 'react-native-paper';
 import * as Yup from 'yup';
 
 import authService from '../services/authService';
 import authContext from '../auth/authContext';
 
+import constants from '../utils/constants';
+import handlers from '../utils/handlers';
 import defaultStyles from '../config/defaultStyles';
 import LoadingScreen from './LoadingScreen';
 import AppScreen from '../components/AppScreen';
@@ -17,8 +19,8 @@ const LOGIN_TYPES = {
 };
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string().required().email().label('Email'),
-  password: Yup.string().required().min(6).label('Password'),
+  email: Yup.string().required().email().label(constants.EMAIL),
+  password: Yup.string().required().min(6).label(constants.PASSWORD),
 });
 
 const LoginScreen = () => {
@@ -33,7 +35,7 @@ const LoginScreen = () => {
     const response = await loginType(values);
     setLoading(false);
     // error
-    if (!response.isSuccess) return Alert.alert('Error', response.error);
+    if (!response.isSuccess) return handlers.handleErrorAlert(response.error);
     // success
     setUserProfile(response.data.userProfile);
     setUser(response.data.user);
@@ -55,7 +57,7 @@ const LoginScreen = () => {
         {/** email */}
         <AppFormTextInput
           name="email"
-          label="Email"
+          label={constants.EMAIL}
           autoCapitalize="none"
           autoCorrect={false}
           keyboardType="email-address"
@@ -63,7 +65,7 @@ const LoginScreen = () => {
         {/** password */}
         <AppFormTextInput
           name="password"
-          label="Password"
+          label={constants.PASSWORD}
           icon="eye"
           onIconPress={() => setHidePassword(!hidePassword)}
           autoCapitalize="none"
@@ -71,7 +73,7 @@ const LoginScreen = () => {
           secureTextEntry={hidePassword}
         />
         {/** submit */}
-        <AppFormButton label="Login" />
+        <AppFormButton label={constants.LOGIN} />
       </AppForm>
       {/** google button */}
       <View style={styles.googleButtonContainer}>
@@ -80,7 +82,7 @@ const LoginScreen = () => {
           icon="google"
           mode="contained"
           onPress={() => handleLogin(LOGIN_TYPES.GOOGLE)}>
-          Login
+          {constants.LOGIN}
         </Button>
       </View>
     </AppScreen>

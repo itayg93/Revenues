@@ -1,4 +1,5 @@
 import {Alert} from 'react-native';
+import constants from './constants';
 
 // handle error
 const handleError = error => {
@@ -16,13 +17,19 @@ const handleSuccess = (data = {}) => {
   };
 };
 
-// show alert
-const handleShowAlert = (title, alertMessage) => {
-  Alert.alert(title, alertMessage);
+// handle error alert
+const handleErrorAlert = alert => {
+  Alert.alert(constants.ERROR, alert);
+};
+
+// handle success alert
+const handleSuccessAlert = alert => {
+  Alert.alert(constants.SUCCESS, alert);
 };
 
 export default {
   handleError,
   handleSuccess,
-  handleShowAlert,
+  handleErrorAlert,
+  handleSuccessAlert,
 };

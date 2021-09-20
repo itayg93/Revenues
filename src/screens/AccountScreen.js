@@ -10,6 +10,7 @@ import {
 import {Portal, Headline} from 'react-native-paper';
 import * as Yup from 'yup';
 
+import constants from '../utils/constants';
 import handlers from '../utils/handlers';
 import authContext from '../auth/authContext';
 import authService from '../services/authService';
@@ -27,15 +28,6 @@ import {
 } from '../components/form';
 import AppHelperText from '../components/AppHelperText';
 
-const SUCCESS = 'Success';
-const SUCCESS_ALERT_MESSAGE = 'Profile successfully updated!';
-const ERROR = 'Error';
-
-const HELPER_TEXT_PREFIX = 'Current: ';
-
-const PERCENTAGE = '%';
-const INS = '₪';
-
 const validationSchema = Yup.object().shape({
   taxRefunds: Yup.boolean(),
   taxPoints: Yup.number(),
@@ -52,8 +44,7 @@ const AccountScreen = () => {
   const handleLogout = async () => {
     const response = await authService.handleLogoutCurrentUser();
     // error
-    if (!response.isSuccess)
-      return handlers.handleShowAlert(ERROR, response.error);
+    if (!response.isSuccess) return handlers.handleErrorAlert(response.error);
     // success
     setUser();
   };
@@ -69,11 +60,10 @@ const AccountScreen = () => {
     // null
     if (!response) return;
     // error
-    if (!response.isSuccess)
-      return handlers.handleShowAlert(ERROR, response.error);
+    if (!response.isSuccess) return handlers.handleErrorAlert(response.error);
     // success
     setUserProfile(response.data);
-    handlers.handleShowAlert(SUCCESS, SUCCESS_ALERT_MESSAGE);
+    handlers.handleSuccessAlert(constants.PROFILE_SUCCESS_ALERT_MESSAGE);
   };
 
   return (
@@ -106,11 +96,13 @@ const AccountScreen = () => {
                 resetForm();
               }}>
               {/** taxes && commission */}
-              <Headline style={styles.headline}>Tax & Commission</Headline>
+              <Headline style={styles.headline}>
+                {constants.TAX_COMMISSION}
+              </Headline>
               {/** tax refunds */}
               <AppFormSwitch
                 name="taxRefunds"
-                label="Tax Refunds"
+                label={constants.TAX_REFUNDS}
                 value={userProfile.taxRefunds}
               />
               <View style={styles.textInputsContainer}>
@@ -118,52 +110,54 @@ const AccountScreen = () => {
                 <View style={styles.leftInputContainer}>
                   <AppFormTextInput
                     name="taxPoints"
-                    label="Tax Points"
+                    label={constants.TAX_POINTS}
                     keyboardType="numeric"
                   />
                   <AppHelperText
                     style={styles.helperText}
-                    message={`${HELPER_TEXT_PREFIX}${userProfile.taxPoints}`}
+                    message={`${constants.HELPER_TEXT_PREFIX}${userProfile.taxPoints}`}
                   />
                 </View>
                 {/** commission */}
                 <View style={styles.rightInputContainer}>
                   <AppFormTextInput
                     name="commissionRate"
-                    label="Commission Rate"
+                    label={constants.COMMISSION_RATE}
                     keyboardType="numeric"
                   />
                   <AppHelperText
                     style={styles.helperText}
-                    message={`${HELPER_TEXT_PREFIX}${userProfile.commissionRate}${PERCENTAGE}`}
+                    message={`${constants.HELPER_TEXT_PREFIX}${userProfile.commissionRate}${constants.PERCENTAGE}`}
                   />
                 </View>
               </View>
               {/** insurances */}
-              <Headline style={styles.headline}>Insurances</Headline>
+              <Headline style={styles.headline}>
+                {constants.INSURANCES}
+              </Headline>
               <View style={styles.textInputsContainer}>
                 {/** compulsory */}
                 <View style={styles.leftInputContainer}>
                   <AppFormTextInput
                     name="compulsoryInsurance"
-                    label="Compulsory "
+                    label={constants.COMPULSORY}
                     keyboardType="numeric"
                   />
                   <AppHelperText
                     style={styles.helperText}
-                    message={`${HELPER_TEXT_PREFIX}${userProfile.compulsoryInsurance}${INS}`}
+                    message={`${constants.HELPER_TEXT_PREFIX}${userProfile.compulsoryInsurance}${constants.INS}`}
                   />
                 </View>
                 {/** collateral */}
                 <View style={styles.rightInputContainer}>
                   <AppFormTextInput
                     name="collateralInsurance"
-                    label="Collateral "
+                    label={constants.COLLATERAL}
                     keyboardType="numeric"
                   />
                   <AppHelperText
                     style={styles.helperText}
-                    message={`${HELPER_TEXT_PREFIX}${userProfile.collateralInsurance}${INS}`}
+                    message={`${constants.HELPER_TEXT_PREFIX}${userProfile.collateralInsurance}${constants.INS}`}
                   />
                 </View>
               </View>

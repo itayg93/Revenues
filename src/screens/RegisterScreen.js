@@ -1,21 +1,22 @@
 import React, {useState, useContext} from 'react';
-import {Keyboard, Alert, StyleSheet} from 'react-native';
+import {Keyboard, StyleSheet} from 'react-native';
 import {Portal} from 'react-native-paper';
 import * as Yup from 'yup';
 
 import authService from '../services/authService';
 import authContext from '../auth/authContext';
 
+import constants from '../utils/constants';
+import handlers from '../utils/handlers';
 import defaultStyles from '../config/defaultStyles';
 import LoadingScreen from './LoadingScreen';
 import AppScreen from '../components/AppScreen';
 import {AppForm, AppFormTextInput, AppFormButton} from '../components/form';
-import LoginScreen from './LoginScreen';
 
 const validationSchema = Yup.object().shape({
-  name: Yup.string().required().label('Name'),
-  email: Yup.string().required().email().label('Email'),
-  password: Yup.string().required().min(6).label('Password'),
+  name: Yup.string().required().label(constants.NAME),
+  email: Yup.string().required().email().label(constants.EMAIL),
+  password: Yup.string().required().min(6).label(constants.PASSWORD),
 });
 
 const RegisterScreen = () => {
@@ -34,7 +35,7 @@ const RegisterScreen = () => {
     );
     setLoading(false);
     // error
-    if (!response.isSuccess) return Alert.alert('Error', response.error);
+    if (!response.isSuccess) return handlers.handleErrorAlert(response.error);
     // success
     setUserProfile(response.data.userProfile);
     setUser(response.data.user);
@@ -55,11 +56,15 @@ const RegisterScreen = () => {
           handleRegister(values);
         }}>
         {/** name */}
-        <AppFormTextInput name="name" label="Name" autoCorrect={false} />
+        <AppFormTextInput
+          name="name"
+          label={constants.NAME}
+          autoCorrect={false}
+        />
         {/** email */}
         <AppFormTextInput
           name="email"
-          label="Email"
+          label={constants.EMAIL}
           autoCapitalize="none"
           autoCorrect={false}
           keyboardType="email-address"
@@ -67,7 +72,7 @@ const RegisterScreen = () => {
         {/** password */}
         <AppFormTextInput
           name="password"
-          label="Password"
+          label={constants.PASSWORD}
           icon="eye"
           onIconPress={() => setHidePassword(!hidePassword)}
           autoCapitalize="none"
@@ -75,7 +80,7 @@ const RegisterScreen = () => {
           secureTextEntry={hidePassword}
         />
         {/** submit */}
-        <AppFormButton label="Register" />
+        <AppFormButton />
       </AppForm>
     </AppScreen>
   );

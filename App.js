@@ -1,13 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Alert} from 'react-native';
 import {Provider} from 'react-native-paper';
 import {NavigationContainer} from '@react-navigation/native';
 
 import authService from './src/services/authService';
 import authContext from './src/auth/authContext';
-
 import AppNavigator from './src/navigation/AppNavigator';
 import AuthNavigator from './src/navigation/AuthNavigator';
+import handlers from './src/utils/handlers';
 
 const App = () => {
   const [initializing, setInitializing] = useState(true);
@@ -25,7 +24,7 @@ const App = () => {
     // null
     if (!response) return;
     // error
-    if (!response.isSuccess) return Alert.alert('Error', response.error);
+    if (!response.isSuccess) return handlers.handleErrorAlert(response.error);
     // success
     setUserProfile(response.data.userProfile);
     setUser(response.data.user);
