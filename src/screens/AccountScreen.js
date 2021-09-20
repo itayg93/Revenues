@@ -67,7 +67,11 @@ const AccountScreen = () => {
       <AppScreen>
         {/** profile card */}
         <View style={styles.userProfileCardContainer}>
-          <AppUserProfileCard user={user} onLogoutPress={handleLogout} />
+          <AppUserProfileCard
+            user={user}
+            lastUpdateMillis={userProfile.timestamp}
+            onPress={handleLogout}
+          />
         </View>
         <ScrollView>
           <View style={styles.appFormContainer}>

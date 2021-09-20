@@ -1,11 +1,12 @@
 import React from 'react';
 import {StyleSheet, View, TouchableOpacity} from 'react-native';
-import {Surface, Avatar, Title, Caption} from 'react-native-paper';
+import {Surface, Avatar, Title, Paragraph, Caption} from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import defaultStyles from '../config/defaultStyles';
 
-const AppUserProfileCard = ({user, onLogoutPress}) => {
+const AppUserProfileCard = ({user, lastUpdateMillis, onPress}) => {
+  var lastUpdateDate = new Date(parseInt(lastUpdateMillis, 10)).toString();
   return (
     <Surface style={styles.container}>
       {/** avatar */}
@@ -15,10 +16,11 @@ const AppUserProfileCard = ({user, onLogoutPress}) => {
       {/** user details */}
       <View style={styles.userDetailsContainer}>
         <Title>{user.displayName}</Title>
-        <Caption>{user.email}</Caption>
+        <Paragraph>{user.email}</Paragraph>
+        <Caption numberOfLines={1}>Last update: {lastUpdateDate}</Caption>
       </View>
       {/** logout icon */}
-      <TouchableOpacity onPress={onLogoutPress}>
+      <TouchableOpacity onPress={onPress}>
         <MaterialCommunityIcons
           name="logout"
           size={24}
