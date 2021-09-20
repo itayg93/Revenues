@@ -6,11 +6,11 @@ import {
   Keyboard,
   ScrollView,
   View,
-  Alert,
 } from 'react-native';
 import {Headline} from 'react-native-paper';
 import * as Yup from 'yup';
 
+import handlers from '../utils/handlers';
 import authContext from '../auth/authContext';
 import authService from '../services/authService';
 import profileService from '../services/profileService';
@@ -21,7 +21,12 @@ import AppUserProfileCard from '../components/AppUserProfileCard';
 import {AppForm, AppFormTextInput, AppFormButton} from '../components/form';
 import AppHelperText from '../components/AppHelperText';
 
+const SUCCESS = 'Success';
+const SUCCESS_ALERT_MESSAGE = 'Profile successfully updated!';
+const ERROR = 'Error';
+
 const HELPER_TEXT_PREFIX = 'Current: ';
+
 const PERCENTAGE = '%';
 const INS = '₪';
 
@@ -40,12 +45,13 @@ const AccountScreen = () => {
   const handleLogout = async () => {
     const response = await authService.handleLogoutCurrentUser();
     // error
-    if (!response.isSuccess) return Alert.alert('Error', response.error);
+    if (!response.isSuccess)
+      return handlers.handleShowAlert(ERROR, response.error);
     // success
     setUser();
   };
 
-  const handleSubmit = async (values, resetForm) => {
+  const handleSubmit = async values => {
     setLoading(true);
     const response = await profileService.handleUpdateCurrentUserProfile(
       user.uid,
@@ -55,11 +61,11 @@ const AccountScreen = () => {
     // null
     if (!response) return;
     // error
-    if (!response.isSuccess) return Alert.alert('Error', response.error);
+    if (!response.isSuccess)
+      return handlers.handleShowAlert(ERROR, response.error);
     // success
-    resetForm();
     setUserProfile(response.data);
-    Alert.alert('Success', 'Profile successfully updated!');
+    handlers.handleShowAlert(SUCCESS, SUCCESS_ALERT_MESSAGE);
   };
 
   return (
@@ -85,9 +91,10 @@ const AccountScreen = () => {
                 collateralInsurance: '',
               }}
               validationSchema={validationSchema}
-              onSubmit={(values, {resetForm}) => {
+              onSubmit={async (values, {resetForm}) => {
                 Keyboard.dismiss();
-                handleSubmit(values, resetForm);
+                await handleSubmit(values);
+                resetForm();
               }}>
               {/** tax */}
               <AppFormTextInput
@@ -111,26 +118,32 @@ const AccountScreen = () => {
               />
               {/** insurances */}
               <Headline style={styles.headline}>Insurances</Headline>
-              {/** compulsory */}
-              <AppFormTextInput
-                name="compulsoryInsurance"
-                label="Compulsory "
-                keyboardType="numeric"
-              />
-              <AppHelperText
-                style={styles.helperText}
-                message={`${HELPER_TEXT_PREFIX}${userProfile.compulsoryInsurance}${INS}`}
-              />
-              {/** collateral */}
-              <AppFormTextInput
-                name="collateralInsurance"
-                label="Collateral "
-                keyboardType="numeric"
-              />
-              <AppHelperText
-                style={styles.helperText}
-                message={`${HELPER_TEXT_PREFIX}${userProfile.collateralInsurance}${INS}`}
-              />
+              <View style={styles.insurancesContainer}>
+                {/** compulsory */}
+                <View style={styles.insuranceContainer}>
+                  <AppFormTextInput
+                    name="compulsoryInsurance"
+                    label="Compulsory "
+                    keyboardType="numeric"
+                  />
+                  <AppHelperText
+                    style={styles.helperText}
+                    message={`${HELPER_TEXT_PREFIX}${userProfile.compulsoryInsurance}${INS}`}
+                  />
+                </View>
+                {/** collateral */}
+                <View style={styles.insuranceContainer}>
+                  <AppFormTextInput
+                    name="collateralInsurance"
+                    label="Collateral "
+                    keyboardType="numeric"
+                  />
+                  <AppHelperText
+                    style={styles.helperText}
+                    message={`${HELPER_TEXT_PREFIX}${userProfile.collateralInsurance}${INS}`}
+                  />
+                </View>
+              </View>
               {/** submit */}
               <AppFormButton loading={loading} />
             </AppForm>
@@ -156,6 +169,12 @@ const styles = StyleSheet.create({
   },
   headline: {
     marginBottom: defaultStyles.spacers.space5,
+  },
+  insurancesContainer: {
+    flexDirection: 'row',
+  },
+  insuranceContainer: {
+    flex: 1,
   },
   helperText: {
     alignSelf: 'flex-end',
