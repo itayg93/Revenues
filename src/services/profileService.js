@@ -33,7 +33,7 @@ const handleGetCurrentUserProfile = async userId => {
 // update current user profile
 const handleUpdateCurrentUserProfile = async (userId, values) => {
   try {
-    let updatedValues = {};
+    let updatedValues = {timestamp: Date.now()};
     Object.entries(values).forEach(([key, value]) => {
       if (value !== '') updatedValues[key] = parseFloat(value);
     });
