@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   KeyboardAvoidingView,
   StyleSheet,
@@ -6,12 +6,14 @@ import {
   Keyboard,
   ScrollView,
   View,
+  Alert,
 } from 'react-native';
 import {Headline} from 'react-native-paper';
 import * as Yup from 'yup';
 
 import authContext from '../auth/authContext';
 import authService from '../services/authService';
+import profileService from '../services/profileService';
 
 import defaultStyles from '../config/defaultStyles';
 import AppScreen from '../components/AppScreen';
@@ -31,7 +33,9 @@ const validationSchema = Yup.object().shape({
 });
 
 const AccountScreen = () => {
-  const {user, setUser, userProfile} = useContext(authContext);
+  const {user, setUser, userProfile, setUserProfile} = useContext(authContext);
+
+  const [loading, setLoading] = useState(false);
 
   const handleLogout = async () => {
     const response = await authService.handleLogoutCurrentUser();
@@ -42,7 +46,17 @@ const AccountScreen = () => {
   };
 
   const handleSubmit = async values => {
-    console.log(values);
+    setLoading(true);
+    const response = await profileService.handleUpdateCurrentUserProfile(
+      user.uid,
+      values,
+    );
+    setLoading(false);
+    // error
+    if (!response.isSuccess) return Alert.alert('Error', response.error);
+    // success
+    setUserProfile(response.data);
+    Alert.alert('Success', 'Profile successfully updated!');
   };
 
   return (
@@ -111,7 +125,7 @@ const AccountScreen = () => {
                 message={`${HELPER_TEXT_PREFIX}${userProfile.collateralInsurance}${INS}`}
               />
               {/** submit */}
-              <AppFormButton />
+              <AppFormButton loading={loading} />
             </AppForm>
           </View>
         </ScrollView>

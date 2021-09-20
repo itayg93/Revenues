@@ -37,8 +37,19 @@ const getCurrentUserProfile = userId => {
     .get();
 };
 
+// update current user profile
+const updateCurrentUserProfile = (userId, values) => {
+  return firestore()
+    .collection(USERS_DATA)
+    .doc(userId)
+    .collection(PROFILE)
+    .doc(USER_PROFILE)
+    .update(values);
+};
+
 export default {
   getDefaultUserProfile,
   createDefaultUserProfile,
   getCurrentUserProfile,
+  updateCurrentUserProfile,
 };
