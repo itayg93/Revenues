@@ -45,7 +45,7 @@ const AccountScreen = () => {
     setUser();
   };
 
-  const handleSubmit = async values => {
+  const handleSubmit = async (values, resetForm) => {
     setLoading(true);
     const response = await profileService.handleUpdateCurrentUserProfile(
       user.uid,
@@ -55,6 +55,7 @@ const AccountScreen = () => {
     // error
     if (!response.isSuccess) return Alert.alert('Error', response.error);
     // success
+    resetForm();
     setUserProfile(response.data);
     Alert.alert('Success', 'Profile successfully updated!');
   };
@@ -78,9 +79,9 @@ const AccountScreen = () => {
                 collateralInsurance: '',
               }}
               validationSchema={validationSchema}
-              onSubmit={values => {
+              onSubmit={(values, {resetForm}) => {
                 Keyboard.dismiss();
-                handleSubmit(values);
+                handleSubmit(values, resetForm);
               }}>
               {/** tax */}
               <AppFormTextInput
