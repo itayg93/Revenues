@@ -19,8 +19,12 @@ import defaultStyles from '../config/defaultStyles';
 import LoadingScreen from '../screens/LoadingScreen';
 import AppScreen from '../components/AppScreen';
 import AppUserProfileCard from '../components/AppUserProfileCard';
-import {AppForm, AppFormTextInput, AppFormButton} from '../components/form';
-import AppFormSwitch from '../components/form/AppFormSwitch';
+import {
+  AppForm,
+  AppFormTextInput,
+  AppFormButton,
+  AppFormSwitch,
+} from '../components/form';
 import AppHelperText from '../components/AppHelperText';
 
 const SUCCESS = 'Success';

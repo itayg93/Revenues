@@ -6,7 +6,7 @@ import {useFormikContext} from 'formik';
 import defaultStyles from '../../config/defaultStyles';
 
 const AppFormSwitch = ({name, label, value}) => {
-  const {values, setFieldValue} = useFormikContext();
+  const {setFieldValue} = useFormikContext();
   const [refunds, setRefunds] = useState(value);
 
   const handleValueChange = value => {
