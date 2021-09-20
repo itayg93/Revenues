@@ -7,7 +7,7 @@ import {
   ScrollView,
   View,
 } from 'react-native';
-import {Headline} from 'react-native-paper';
+import {Portal, Headline} from 'react-native-paper';
 import * as Yup from 'yup';
 
 import handlers from '../utils/handlers';
@@ -16,9 +16,11 @@ import authService from '../services/authService';
 import profileService from '../services/profileService';
 
 import defaultStyles from '../config/defaultStyles';
+import LoadingScreen from '../screens/LoadingScreen';
 import AppScreen from '../components/AppScreen';
 import AppUserProfileCard from '../components/AppUserProfileCard';
 import {AppForm, AppFormTextInput, AppFormButton} from '../components/form';
+import AppFormSwitch from '../components/form/AppFormSwitch';
 import AppHelperText from '../components/AppHelperText';
 
 const SUCCESS = 'Success';
@@ -31,6 +33,7 @@ const PERCENTAGE = '%';
 const INS = '₪';
 
 const validationSchema = Yup.object().shape({
+  taxRefunds: Yup.boolean(),
   taxPoints: Yup.number(),
   commissionRate: Yup.number(),
   compulsoryInsurance: Yup.number(),
@@ -56,6 +59,7 @@ const AccountScreen = () => {
     const response = await profileService.handleUpdateCurrentUserProfile(
       user.uid,
       values,
+      userProfile.taxRefunds,
     );
     setLoading(false);
     // null
@@ -73,6 +77,7 @@ const AccountScreen = () => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}>
       <AppScreen>
+        <Portal>{loading && <LoadingScreen />}</Portal>
         {/** profile card */}
         <View style={styles.userProfileCardContainer}>
           <AppUserProfileCard
@@ -96,31 +101,45 @@ const AccountScreen = () => {
                 await handleSubmit(values);
                 resetForm();
               }}>
-              {/** tax */}
-              <AppFormTextInput
-                name="taxPoints"
-                label="Tax Points"
-                keyboardType="numeric"
+              {/** taxes && commission */}
+              <Headline style={styles.headline}>Tax & Commission</Headline>
+              {/** tax refunds */}
+              <AppFormSwitch
+                name="taxRefunds"
+                label="Tax Refunds"
+                value={userProfile.taxRefunds}
               />
-              <AppHelperText
-                style={styles.helperText}
-                message={`${HELPER_TEXT_PREFIX}${userProfile.taxPoints}`}
-              />
-              {/** commission */}
-              <AppFormTextInput
-                name="commissionRate"
-                label="Commission Rate"
-                keyboardType="numeric"
-              />
-              <AppHelperText
-                style={styles.helperText}
-                message={`${HELPER_TEXT_PREFIX}${userProfile.commissionRate}${PERCENTAGE}`}
-              />
+              <View style={styles.textInputsContainer}>
+                {/** tax points */}
+                <View style={styles.leftInputContainer}>
+                  <AppFormTextInput
+                    name="taxPoints"
+                    label="Tax Points"
+                    keyboardType="numeric"
+                  />
+                  <AppHelperText
+                    style={styles.helperText}
+                    message={`${HELPER_TEXT_PREFIX}${userProfile.taxPoints}`}
+                  />
+                </View>
+                {/** commission */}
+                <View style={styles.rightInputContainer}>
+                  <AppFormTextInput
+                    name="commissionRate"
+                    label="Commission Rate"
+                    keyboardType="numeric"
+                  />
+                  <AppHelperText
+                    style={styles.helperText}
+                    message={`${HELPER_TEXT_PREFIX}${userProfile.commissionRate}${PERCENTAGE}`}
+                  />
+                </View>
+              </View>
               {/** insurances */}
               <Headline style={styles.headline}>Insurances</Headline>
-              <View style={styles.insurancesContainer}>
+              <View style={styles.textInputsContainer}>
                 {/** compulsory */}
-                <View style={styles.insuranceContainer}>
+                <View style={styles.leftInputContainer}>
                   <AppFormTextInput
                     name="compulsoryInsurance"
                     label="Compulsory "
@@ -132,7 +151,7 @@ const AccountScreen = () => {
                   />
                 </View>
                 {/** collateral */}
-                <View style={styles.insuranceContainer}>
+                <View style={styles.rightInputContainer}>
                   <AppFormTextInput
                     name="collateralInsurance"
                     label="Collateral "
@@ -145,7 +164,7 @@ const AccountScreen = () => {
                 </View>
               </View>
               {/** submit */}
-              <AppFormButton loading={loading} />
+              <AppFormButton />
             </AppForm>
           </View>
         </ScrollView>
@@ -167,14 +186,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: defaultStyles.spacers.space10,
     marginBottom: defaultStyles.spacers.space10,
   },
-  headline: {
-    marginBottom: defaultStyles.spacers.space5,
-  },
-  insurancesContainer: {
+  textInputsContainer: {
     flexDirection: 'row',
   },
-  insuranceContainer: {
+  leftInputContainer: {
     flex: 1,
+    marginRight: defaultStyles.spacers.space5,
+  },
+  rightInputContainer: {
+    flex: 1,
+    marginLeft: defaultStyles.spacers.space5,
+  },
+  headline: {
+    marginBottom: defaultStyles.spacers.space10,
   },
   helperText: {
     alignSelf: 'flex-end',

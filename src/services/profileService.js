@@ -31,11 +31,19 @@ const handleGetCurrentUserProfile = async userId => {
 };
 
 // update current user profile
-const handleUpdateCurrentUserProfile = async (userId, values) => {
+const handleUpdateCurrentUserProfile = async (
+  userId,
+  values,
+  currTaxRefundsState,
+) => {
   try {
     let updatedValues = {timestamp: Date.now()};
     Object.entries(values).forEach(([key, value]) => {
-      if (value !== '') updatedValues[key] = parseFloat(value);
+      if (key === 'taxRefunds') {
+        if (value !== currTaxRefundsState) updatedValues[key] = value;
+      }
+      if (key !== 'taxRefunds' && value !== '')
+        updatedValues[key] = parseFloat(value);
     });
     if (Object.keys(updatedValues).length === 1) return;
     await profileApi.updateCurrentUserProfile(userId, updatedValues);

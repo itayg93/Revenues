@@ -5,6 +5,7 @@ const PROFILE = 'PROFILE';
 const USER_PROFILE = 'USER_PROFILE';
 
 const DEFAULT_USER_PROFILE = {
+  taxRefunds: false,
   taxPoints: 2.25,
   commissionRate: 5,
   compulsoryInsurance: 3700,
