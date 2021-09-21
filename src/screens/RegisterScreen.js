@@ -1,5 +1,5 @@
 import React, {useState, useContext} from 'react';
-import {Keyboard, StyleSheet} from 'react-native';
+import {Keyboard, ScrollView, StyleSheet} from 'react-native';
 import {Portal} from 'react-native-paper';
 import * as Yup from 'yup';
 
@@ -43,44 +43,46 @@ const RegisterScreen = () => {
   return (
     <AppScreen style={styles.contentContainer}>
       <Portal>{loading && <LoadingScreen />}</Portal>
-      <AppForm
-        initialValues={{
-          name: '',
-          email: '',
-          password: '',
-        }}
-        validationSchema={validationSchema}
-        onSubmit={values => {
-          Keyboard.dismiss();
-          handleRegister(values);
-        }}>
-        {/** name */}
-        <AppFormTextInput
-          name={constants.name}
-          label={constants.NAME}
-          autoCorrect={false}
-        />
-        {/** email */}
-        <AppFormTextInput
-          name={constants.email}
-          label={constants.EMAIL}
-          autoCapitalize="none"
-          autoCorrect={false}
-          keyboardType="email-address"
-        />
-        {/** password */}
-        <AppFormTextInput
-          name={constants.password}
-          label={constants.PASSWORD}
-          icon="eye"
-          onIconPress={() => setHidePassword(!hidePassword)}
-          autoCapitalize="none"
-          autoCorrect={false}
-          secureTextEntry={hidePassword}
-        />
-        {/** submit */}
-        <AppFormButton />
-      </AppForm>
+      <ScrollView>
+        <AppForm
+          initialValues={{
+            name: '',
+            email: '',
+            password: '',
+          }}
+          validationSchema={validationSchema}
+          onSubmit={values => {
+            Keyboard.dismiss();
+            handleRegister(values);
+          }}>
+          {/** name */}
+          <AppFormTextInput
+            name={constants.name}
+            label={constants.NAME}
+            autoCorrect={false}
+          />
+          {/** email */}
+          <AppFormTextInput
+            name={constants.email}
+            label={constants.EMAIL}
+            autoCapitalize="none"
+            autoCorrect={false}
+            keyboardType="email-address"
+          />
+          {/** password */}
+          <AppFormTextInput
+            name={constants.password}
+            label={constants.PASSWORD}
+            icon="eye"
+            onIconPress={() => setHidePassword(!hidePassword)}
+            autoCapitalize="none"
+            autoCorrect={false}
+            secureTextEntry={hidePassword}
+          />
+          {/** submit */}
+          <AppFormButton />
+        </AppForm>
+      </ScrollView>
     </AppScreen>
   );
 };

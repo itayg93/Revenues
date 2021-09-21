@@ -1,5 +1,5 @@
 import React, {useState, useContext} from 'react';
-import {Keyboard, StyleSheet, View} from 'react-native';
+import {Keyboard, ScrollView, StyleSheet, View} from 'react-native';
 import {Portal, Button} from 'react-native-paper';
 import * as Yup from 'yup';
 
@@ -43,47 +43,49 @@ const LoginScreen = () => {
   return (
     <AppScreen style={styles.contentContainer}>
       <Portal>{loading && <LoadingScreen />}</Portal>
-      <AppForm
-        initialValues={{
-          email: '',
-          password: '',
-        }}
-        validationSchema={validationSchema}
-        onSubmit={values => {
-          Keyboard.dismiss();
-          handleLogin(LOGIN_TYPES.EMAIL_PASSWORD, values);
-        }}>
-        {/** email */}
-        <AppFormTextInput
-          name={constants.email}
-          label={constants.EMAIL}
-          autoCapitalize="none"
-          autoCorrect={false}
-          keyboardType="email-address"
-        />
-        {/** password */}
-        <AppFormTextInput
-          name={constants.password}
-          label={constants.PASSWORD}
-          icon="eye"
-          onIconPress={() => setHidePassword(!hidePassword)}
-          autoCapitalize="none"
-          autoCorrect={false}
-          secureTextEntry={hidePassword}
-        />
-        {/** submit */}
-        <AppFormButton label={constants.LOGIN} />
-      </AppForm>
-      {/** google button */}
-      <View style={styles.googleButtonContainer}>
-        <Button
-          color={defaultStyles.colors.darkGrey}
-          icon="google"
-          mode="contained"
-          onPress={() => handleLogin(LOGIN_TYPES.GOOGLE)}>
-          {constants.LOGIN}
-        </Button>
-      </View>
+      <ScrollView>
+        <AppForm
+          initialValues={{
+            email: '',
+            password: '',
+          }}
+          validationSchema={validationSchema}
+          onSubmit={values => {
+            Keyboard.dismiss();
+            handleLogin(LOGIN_TYPES.EMAIL_PASSWORD, values);
+          }}>
+          {/** email */}
+          <AppFormTextInput
+            name={constants.email}
+            label={constants.EMAIL}
+            autoCapitalize="none"
+            autoCorrect={false}
+            keyboardType="email-address"
+          />
+          {/** password */}
+          <AppFormTextInput
+            name={constants.password}
+            label={constants.PASSWORD}
+            icon="eye"
+            onIconPress={() => setHidePassword(!hidePassword)}
+            autoCapitalize="none"
+            autoCorrect={false}
+            secureTextEntry={hidePassword}
+          />
+          {/** submit */}
+          <AppFormButton label={constants.LOGIN} />
+        </AppForm>
+        {/** google button */}
+        <View style={styles.googleButtonContainer}>
+          <Button
+            color={defaultStyles.colors.darkGrey}
+            icon="google"
+            mode="contained"
+            onPress={() => handleLogin(LOGIN_TYPES.GOOGLE)}>
+            {constants.LOGIN}
+          </Button>
+        </View>
+      </ScrollView>
     </AppScreen>
   );
 };
