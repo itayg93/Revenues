@@ -1,12 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {
-  KeyboardAvoidingView,
-  StyleSheet,
-  Platform,
-  Keyboard,
-  ScrollView,
-  View,
-} from 'react-native';
+import {StyleSheet, Keyboard, ScrollView, View} from 'react-native';
 import {Portal, Headline} from 'react-native-paper';
 import * as Yup from 'yup';
 
@@ -66,111 +59,105 @@ const AccountScreen = () => {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}>
-      <AppScreen>
-        <Portal>{loading && <LoadingScreen />}</Portal>
-        {/** profile card */}
-        <View style={styles.userProfileCardContainer}>
-          <AppUserProfileCard
-            user={user}
-            lastUpdateMillis={userProfile.timestamp}
-            onPress={handleLogout}
-          />
+    <AppScreen>
+      <Portal>{loading && <LoadingScreen />}</Portal>
+      {/** profile card */}
+      <View style={styles.userProfileCardContainer}>
+        <AppUserProfileCard
+          user={user}
+          lastUpdateMillis={userProfile.timestamp}
+          onPress={handleLogout}
+        />
+      </View>
+      <ScrollView>
+        <View style={styles.appFormContainer}>
+          <AppForm
+            initialValues={{
+              taxPoints: '',
+              commissionRate: '',
+              compulsory: '',
+              collateral: '',
+            }}
+            validationSchema={validationSchema}
+            onSubmit={async (values, {resetForm}) => {
+              Keyboard.dismiss();
+              await handleSubmit(values);
+              resetForm();
+            }}>
+            {/** taxes & commission */}
+            <Headline style={styles.headline}>
+              {constants.TAX_COMMISSION}
+            </Headline>
+            {/** tax refunds */}
+            <AppFormSwitch
+              name={constants.taxRefunds}
+              label={constants.TAX_REFUNDS}
+              value={userProfile.taxRefunds}
+            />
+            <View style={styles.textInputsContainer}>
+              {/** tax points */}
+              <View style={styles.leftInputContainer}>
+                <AppFormTextInput
+                  name={constants.taxPoints}
+                  label={constants.TAX_POINTS}
+                  keyboardType="numeric"
+                />
+                <AppHelperText
+                  style={styles.helperText}
+                  message={`${constants.HELPER_TEXT_PREFIX}${userProfile.taxPoints}`}
+                  visible
+                />
+              </View>
+              {/** commission */}
+              <View style={styles.rightInputContainer}>
+                <AppFormTextInput
+                  name={constants.commissionRate}
+                  label={constants.COMMISSION_RATE}
+                  keyboardType="numeric"
+                />
+                <AppHelperText
+                  style={styles.helperText}
+                  message={`${constants.HELPER_TEXT_PREFIX}${userProfile.commissionRate}${constants.PERCENTAGE}`}
+                  visible
+                />
+              </View>
+            </View>
+            {/** insurances */}
+            <Headline style={styles.headline}>{constants.INSURANCES}</Headline>
+            <View style={styles.textInputsContainer}>
+              {/** compulsory */}
+              <View style={styles.leftInputContainer}>
+                <AppFormTextInput
+                  name={constants.compulsory}
+                  label={constants.COMPULSORY}
+                  keyboardType="numeric"
+                />
+                <AppHelperText
+                  style={styles.helperText}
+                  message={`${constants.HELPER_TEXT_PREFIX}${userProfile.compulsory}${constants.INS}`}
+                  visible
+                />
+              </View>
+              {/** collateral */}
+              <View style={styles.rightInputContainer}>
+                <AppFormTextInput
+                  name={constants.collateral}
+                  label={constants.COLLATERAL}
+                  keyboardType="numeric"
+                />
+                <AppHelperText
+                  style={styles.helperText}
+                  message={`${constants.HELPER_TEXT_PREFIX}${userProfile.collateral}${constants.INS}`}
+                  visible
+                />
+              </View>
+            </View>
+            {/** submit */}
+            <AppFormButton />
+          </AppForm>
         </View>
-        <ScrollView>
-          <View style={styles.appFormContainer}>
-            <AppForm
-              initialValues={{
-                taxPoints: '',
-                commissionRate: '',
-                compulsory: '',
-                collateral: '',
-              }}
-              validationSchema={validationSchema}
-              onSubmit={async (values, {resetForm}) => {
-                Keyboard.dismiss();
-                await handleSubmit(values);
-                resetForm();
-              }}>
-              {/** taxes && commission */}
-              <Headline style={styles.headline}>
-                {constants.TAX_COMMISSION}
-              </Headline>
-              {/** tax refunds */}
-              <AppFormSwitch
-                name={constants.taxRefunds}
-                label={constants.TAX_REFUNDS}
-                value={userProfile.taxRefunds}
-              />
-              <View style={styles.textInputsContainer}>
-                {/** tax points */}
-                <View style={styles.leftInputContainer}>
-                  <AppFormTextInput
-                    name={constants.taxPoints}
-                    label={constants.TAX_POINTS}
-                    keyboardType="numeric"
-                  />
-                  <AppHelperText
-                    style={styles.helperText}
-                    message={`${constants.HELPER_TEXT_PREFIX}${userProfile.taxPoints}`}
-                    visible
-                  />
-                </View>
-                {/** commission */}
-                <View style={styles.rightInputContainer}>
-                  <AppFormTextInput
-                    name={constants.commissionRate}
-                    label={constants.COMMISSION_RATE}
-                    keyboardType="numeric"
-                  />
-                  <AppHelperText
-                    style={styles.helperText}
-                    message={`${constants.HELPER_TEXT_PREFIX}${userProfile.commissionRate}${constants.PERCENTAGE}`}
-                    visible
-                  />
-                </View>
-              </View>
-              {/** insurances */}
-              <Headline style={styles.headline}>
-                {constants.INSURANCES}
-              </Headline>
-              <View style={styles.textInputsContainer}>
-                {/** compulsory */}
-                <View style={styles.leftInputContainer}>
-                  <AppFormTextInput
-                    name={constants.compulsory}
-                    label={constants.COMPULSORY}
-                    keyboardType="numeric"
-                  />
-                  <AppHelperText
-                    style={styles.helperText}
-                    message={`${constants.HELPER_TEXT_PREFIX}${userProfile.compulsory}${constants.INS}`}
-                    visible
-                  />
-                </View>
-                {/** collateral */}
-                <View style={styles.rightInputContainer}>
-                  <AppFormTextInput
-                    name={constants.collateral}
-                    label={constants.COLLATERAL}
-                    keyboardType="numeric"
-                  />
-                  <AppHelperText
-                    style={styles.helperText}
-                    message={`${constants.HELPER_TEXT_PREFIX}${userProfile.collateral}${constants.INS}`}
-                    visible
-                  />
-                </View>
-              </View>
-              {/** submit */}
-              <AppFormButton />
-            </AppForm>
-          </View>
-        </ScrollView>
-      </AppScreen>
-    </KeyboardAvoidingView>
+      </ScrollView>
+    </AppScreen>
   );
 };
 
