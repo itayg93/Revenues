@@ -18,4 +18,15 @@ export default {
   COMMISSION_RATE: 'Commission Rate',
   COMPULSORY: 'Compulsory',
   COLLATERAL: 'Collateral',
+  USERS_DATA: 'USERS_DATA',
+  PROFILE: 'PROFILE',
+  USER_PROFILE: 'USER_PROFILE',
+  DEFAULT_USER_PROFILE: {
+    taxRefunds: false,
+    taxPoints: 2.25,
+    commissionRate: 5,
+    compulsoryInsurance: 3700,
+    collateralInsurance: 500,
+    timestamp: Date.now(),
+  },
 };
