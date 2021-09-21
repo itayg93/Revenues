@@ -15,7 +15,6 @@ import handlers from '../utils/handlers';
 import authContext from '../auth/authContext';
 import authService from '../services/authService';
 import profileService from '../services/profileService';
-
 import defaultStyles from '../config/defaultStyles';
 import LoadingScreen from '../screens/LoadingScreen';
 import AppScreen from '../components/AppScreen';
@@ -86,8 +85,8 @@ const AccountScreen = () => {
               initialValues={{
                 taxPoints: '',
                 commissionRate: '',
-                compulsoryInsurance: '',
-                collateralInsurance: '',
+                compulsory: '',
+                collateral: '',
               }}
               validationSchema={validationSchema}
               onSubmit={async (values, {resetForm}) => {
@@ -101,7 +100,7 @@ const AccountScreen = () => {
               </Headline>
               {/** tax refunds */}
               <AppFormSwitch
-                name="taxRefunds"
+                name={constants.taxRefunds}
                 label={constants.TAX_REFUNDS}
                 value={userProfile.taxRefunds}
               />
@@ -109,7 +108,7 @@ const AccountScreen = () => {
                 {/** tax points */}
                 <View style={styles.leftInputContainer}>
                   <AppFormTextInput
-                    name="taxPoints"
+                    name={constants.taxPoints}
                     label={constants.TAX_POINTS}
                     keyboardType="numeric"
                   />
@@ -122,7 +121,7 @@ const AccountScreen = () => {
                 {/** commission */}
                 <View style={styles.rightInputContainer}>
                   <AppFormTextInput
-                    name="commissionRate"
+                    name={constants.commissionRate}
                     label={constants.COMMISSION_RATE}
                     keyboardType="numeric"
                   />
@@ -141,26 +140,26 @@ const AccountScreen = () => {
                 {/** compulsory */}
                 <View style={styles.leftInputContainer}>
                   <AppFormTextInput
-                    name="compulsoryInsurance"
+                    name={constants.compulsory}
                     label={constants.COMPULSORY}
                     keyboardType="numeric"
                   />
                   <AppHelperText
                     style={styles.helperText}
-                    message={`${constants.HELPER_TEXT_PREFIX}${userProfile.compulsoryInsurance}${constants.INS}`}
+                    message={`${constants.HELPER_TEXT_PREFIX}${userProfile.compulsory}${constants.INS}`}
                     visible
                   />
                 </View>
                 {/** collateral */}
                 <View style={styles.rightInputContainer}>
                   <AppFormTextInput
-                    name="collateralInsurance"
+                    name={constants.collateral}
                     label={constants.COLLATERAL}
                     keyboardType="numeric"
                   />
                   <AppHelperText
                     style={styles.helperText}
-                    message={`${constants.HELPER_TEXT_PREFIX}${userProfile.collateralInsurance}${constants.INS}`}
+                    message={`${constants.HELPER_TEXT_PREFIX}${userProfile.collateral}${constants.INS}`}
                     visible
                   />
                 </View>

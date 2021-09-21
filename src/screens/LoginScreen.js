@@ -5,7 +5,6 @@ import * as Yup from 'yup';
 
 import authService from '../services/authService';
 import authContext from '../auth/authContext';
-
 import constants from '../utils/constants';
 import handlers from '../utils/handlers';
 import defaultStyles from '../config/defaultStyles';
@@ -56,7 +55,7 @@ const LoginScreen = () => {
         }}>
         {/** email */}
         <AppFormTextInput
-          name="email"
+          name={constants.email}
           label={constants.EMAIL}
           autoCapitalize="none"
           autoCorrect={false}
@@ -64,7 +63,7 @@ const LoginScreen = () => {
         />
         {/** password */}
         <AppFormTextInput
-          name="password"
+          name={constants.password}
           label={constants.PASSWORD}
           icon="eye"
           onIconPress={() => setHidePassword(!hidePassword)}

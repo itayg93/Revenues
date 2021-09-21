@@ -5,7 +5,6 @@ import * as Yup from 'yup';
 
 import authService from '../services/authService';
 import authContext from '../auth/authContext';
-
 import constants from '../utils/constants';
 import handlers from '../utils/handlers';
 import defaultStyles from '../config/defaultStyles';
@@ -57,13 +56,13 @@ const RegisterScreen = () => {
         }}>
         {/** name */}
         <AppFormTextInput
-          name="name"
+          name={constants.name}
           label={constants.NAME}
           autoCorrect={false}
         />
         {/** email */}
         <AppFormTextInput
-          name="email"
+          name={constants.email}
           label={constants.EMAIL}
           autoCapitalize="none"
           autoCorrect={false}
@@ -71,7 +70,7 @@ const RegisterScreen = () => {
         />
         {/** password */}
         <AppFormTextInput
-          name="password"
+          name={constants.password}
           label={constants.PASSWORD}
           icon="eye"
           onIconPress={() => setHidePassword(!hidePassword)}
