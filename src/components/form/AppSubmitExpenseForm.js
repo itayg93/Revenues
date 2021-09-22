@@ -1,17 +1,11 @@
 import React from 'react';
 import {Keyboard, StyleSheet, View} from 'react-native';
 import {Surface} from 'react-native-paper';
-import * as Yup from 'yup';
 
+import validationSchemas from '../../utils/validationSchemas';
 import constants from '../../utils/constants';
 import defaultStyles from '../../config/defaultStyles';
 import {AppForm, AppFormChip, AppFormTextInput, AppFormButton} from '../form';
-
-const validationSchema = Yup.object().shape({
-  type: Yup.string(),
-  cost: Yup.number().required(constants.REQUIRED),
-  comment: Yup.string(),
-});
 
 const AppSubmitExpenseForm = ({onSubmitExpense}) => {
   return (
@@ -22,7 +16,7 @@ const AppSubmitExpenseForm = ({onSubmitExpense}) => {
           cost: '',
           comment: '',
         }}
-        validationSchema={validationSchema}
+        validationSchema={validationSchemas.EXPENSE}
         onSubmit={async (values, {resetForm}) => {
           Keyboard.dismiss();
           await onSubmitExpense(values);

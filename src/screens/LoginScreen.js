@@ -1,10 +1,10 @@
 import React, {useState, useContext} from 'react';
 import {Keyboard, ScrollView, StyleSheet, View} from 'react-native';
 import {Portal, Button} from 'react-native-paper';
-import * as Yup from 'yup';
 
 import authService from '../services/authService';
 import authContext from '../auth/authContext';
+import validationSchemas from '../utils/validationSchemas';
 import constants from '../utils/constants';
 import handlers from '../utils/handlers';
 import defaultStyles from '../config/defaultStyles';
@@ -16,11 +16,6 @@ const LOGIN_TYPES = {
   EMAIL_PASSWORD: authService.handleLoginWithEmailAndPassword,
   GOOGLE: authService.handleLoginWithGoogle,
 };
-
-const validationSchema = Yup.object().shape({
-  email: Yup.string().required().email().label(constants.EMAIL),
-  password: Yup.string().required().min(6).label(constants.PASSWORD),
-});
 
 const LoginScreen = () => {
   const {setUser, setUserProfile} = useContext(authContext);
@@ -49,7 +44,7 @@ const LoginScreen = () => {
             email: '',
             password: '',
           }}
-          validationSchema={validationSchema}
+          validationSchema={validationSchemas.LOGIN}
           onSubmit={values => {
             Keyboard.dismiss();
             handleLogin(LOGIN_TYPES.EMAIL_PASSWORD, values);

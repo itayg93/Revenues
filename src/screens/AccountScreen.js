@@ -1,8 +1,8 @@
 import React, {useContext, useState} from 'react';
 import {StyleSheet, Keyboard, ScrollView, View} from 'react-native';
 import {Portal, Headline} from 'react-native-paper';
-import * as Yup from 'yup';
 
+import validationSchemas from '../utils/validationSchemas';
 import constants from '../utils/constants';
 import handlers from '../utils/handlers';
 import authContext from '../auth/authContext';
@@ -19,14 +19,6 @@ import {
   AppFormSwitch,
 } from '../components/form';
 import AppHelperText from '../components/AppHelperText';
-
-const validationSchema = Yup.object().shape({
-  taxRefunds: Yup.boolean(),
-  taxPoints: Yup.number(),
-  commissionRate: Yup.number(),
-  compulsoryInsurance: Yup.number(),
-  collateralInsurance: Yup.number(),
-});
 
 const AccountScreen = () => {
   const {user, setUser, userProfile, setUserProfile} = useContext(authContext);
@@ -78,7 +70,7 @@ const AccountScreen = () => {
               compulsory: '',
               collateral: '',
             }}
-            validationSchema={validationSchema}
+            validationSchema={validationSchemas.PROFILE}
             onSubmit={async (values, {resetForm}) => {
               Keyboard.dismiss();
               await handleSubmit(values);

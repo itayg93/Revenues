@@ -8,7 +8,7 @@ import AppScreen from '../components/AppScreen';
 const RevenuesScreen = () => {
   return (
     <AppScreen style={styles.contentContainer}>
-      <Headline>Revenues Screen</Headline>
+      <Headline>Revenues</Headline>
     </AppScreen>
   );
 };

@@ -1,22 +1,16 @@
 import React, {useState, useContext} from 'react';
 import {Keyboard, ScrollView, StyleSheet} from 'react-native';
 import {Portal} from 'react-native-paper';
-import * as Yup from 'yup';
 
 import authService from '../services/authService';
 import authContext from '../auth/authContext';
+import validationSchemas from '../utils/validationSchemas';
 import constants from '../utils/constants';
 import handlers from '../utils/handlers';
 import defaultStyles from '../config/defaultStyles';
 import LoadingScreen from './LoadingScreen';
 import AppScreen from '../components/AppScreen';
 import {AppForm, AppFormTextInput, AppFormButton} from '../components/form';
-
-const validationSchema = Yup.object().shape({
-  name: Yup.string().required().label(constants.NAME),
-  email: Yup.string().required().email().label(constants.EMAIL),
-  password: Yup.string().required().min(6).label(constants.PASSWORD),
-});
 
 const RegisterScreen = () => {
   const {setUser, setUserProfile} = useContext(authContext);
@@ -50,7 +44,7 @@ const RegisterScreen = () => {
             email: '',
             password: '',
           }}
-          validationSchema={validationSchema}
+          validationSchema={validationSchemas.REGISTER}
           onSubmit={values => {
             Keyboard.dismiss();
             handleRegister(values);
