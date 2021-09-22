@@ -37,4 +37,21 @@ export default {
   commissionRate: 'commissionRate',
   compulsory: 'compulsory',
   collateral: 'collateral',
+  expensesTypes: [
+    {
+      value: 'fuel',
+      label: 'Fuel',
+      icon: 'fuel',
+    },
+    {
+      value: 'maintenance',
+      label: 'Maintenance',
+      icon: 'screwdriver',
+    },
+    {
+      value: 'equipment',
+      label: 'Equipment',
+      icon: 'racing-helmet',
+    },
+  ],
 };
