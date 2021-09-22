@@ -1,4 +1,5 @@
 import {Alert} from 'react-native';
+
 import constants from './constants';
 
 // handle error
