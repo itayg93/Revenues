@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react';
 import {StyleSheet, View, ScrollView, Keyboard} from 'react-native';
-import {Portal, Surface, Headline, Paragraph} from 'react-native-paper';
+import {Portal, Surface, Headline} from 'react-native-paper';
 import * as Yup from 'yup';
 
 import authContext from '../auth/authContext';
@@ -19,7 +19,7 @@ import {
 
 const validationSchema = Yup.object().shape({
   type: Yup.string(),
-  cost: Yup.number().required('Required'),
+  cost: Yup.number().required(constants.REQUIRED),
   comment: Yup.string(),
 });
 
@@ -35,7 +35,7 @@ const DashboardScreen = () => {
     // error
     if (!response.isSuccess) return handlers.handleErrorAlert(response.error);
     // success
-    handlers.handleSuccessAlert('Expense successfully Added!');
+    handlers.handleSuccessAlert(constants.SUBMIT_EXPENSE_SUCCESS_ALERT_MESSAGE);
   };
 
   return (
@@ -43,7 +43,7 @@ const DashboardScreen = () => {
       <Portal>{loading && <LoadingScreen />}</Portal>
       <ScrollView>
         {/** add expense */}
-        <Headline>Add Expense</Headline>
+        <Headline>{constants.ADD_EXPENSE}</Headline>
         <Surface style={styles.addExpenseContainer}>
           <AppForm
             initialValues={{
@@ -58,27 +58,26 @@ const DashboardScreen = () => {
               resetForm();
             }}>
             {/** type */}
-            <Paragraph>Type</Paragraph>
             <View style={styles.typeChipsContainer}>
               {constants.expensesTypes.map((t, index) => (
                 <AppFormChip key={index.toString()} type={t} />
               ))}
             </View>
             {/** cost & comment */}
-            <View style={styles.TextInputsContainer}>
+            <View style={styles.textInputsContainer}>
               {/** cost */}
               <View style={styles.leftInputContainer}>
                 <AppFormTextInput
-                  name="cost"
-                  label="Cost"
+                  name={constants.cost}
+                  label={constants.COST}
                   keyboardType="numeric"
                 />
               </View>
               {/** comment */}
               <View style={styles.rightInputContainer}>
                 <AppFormTextInput
-                  name="comment"
-                  label="Comment"
+                  name={constants.comment}
+                  label={constants.COMMENT}
                   autoCorrect={false}
                   multiline
                 />
@@ -89,7 +88,7 @@ const DashboardScreen = () => {
           </AppForm>
         </Surface>
         {/** start shift */}
-        <Headline>Start Shift</Headline>
+        <Headline>{constants.START_SHIFT}</Headline>
         <Surface style={styles.startShiftContainer}></Surface>
       </ScrollView>
     </AppScreen>
@@ -115,7 +114,7 @@ const styles = StyleSheet.create({
     marginTop: defaultStyles.spacers.space5,
     marginBottom: defaultStyles.spacers.space10,
   },
-  TextInputsContainer: {
+  textInputsContainer: {
     flexDirection: 'row',
   },
   leftInputContainer: {
