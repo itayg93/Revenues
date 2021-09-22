@@ -1,10 +1,14 @@
-import React from 'react';
+import React, {useContext, useState} from 'react';
 import {StyleSheet, View, ScrollView, Keyboard} from 'react-native';
-import {Surface, Headline, Paragraph} from 'react-native-paper';
+import {Portal, Surface, Headline, Paragraph} from 'react-native-paper';
 import * as Yup from 'yup';
 
+import authContext from '../auth/authContext';
+import expenseService from '../services/expenseService';
 import constants from '../utils/constants';
+import handlers from '../utils/handlers';
 import defaultStyles from '../config/defaultStyles';
+import LoadingScreen from './LoadingScreen';
 import AppScreen from '../components/AppScreen';
 import {
   AppForm,
@@ -15,13 +19,28 @@ import {
 
 const validationSchema = Yup.object().shape({
   type: Yup.string(),
-  cost: Yup.number().required().label('Cost'),
+  cost: Yup.number().required('Required'),
   comment: Yup.string(),
 });
 
 const DashboardScreen = () => {
+  const {user, userProfile} = useContext(authContext);
+
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async values => {
+    setLoading(true);
+    const response = await expenseService.handleSubmitExpense(user.uid, values);
+    setLoading(false);
+    // error
+    if (!response.isSuccess) return handlers.handleErrorAlert(response.error);
+    // success
+    handlers.handleSuccessAlert('Expense successfully Added!');
+  };
+
   return (
     <AppScreen style={styles.contentContainer}>
+      <Portal>{loading && <LoadingScreen />}</Portal>
       <ScrollView>
         {/** add expense */}
         <Headline>Add Expense</Headline>
@@ -33,9 +52,9 @@ const DashboardScreen = () => {
               comment: '',
             }}
             validationSchema={validationSchema}
-            onSubmit={(values, {resetForm}) => {
+            onSubmit={async (values, {resetForm}) => {
               Keyboard.dismiss();
-              console.log(values);
+              await handleSubmit(values);
               resetForm();
             }}>
             {/** type */}

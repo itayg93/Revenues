@@ -20,6 +20,7 @@ export default {
   COLLATERAL: 'Collateral',
   USERS_DATA: 'USERS_DATA',
   PROFILE: 'PROFILE',
+  EXPENSES: 'EXPENSES',
   USER_PROFILE: 'USER_PROFILE',
   DEFAULT_USER_PROFILE: {
     taxRefunds: false,
