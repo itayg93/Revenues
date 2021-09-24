@@ -24,4 +24,10 @@ export default {
     cost: Yup.number().required(constants.REQUIRED),
     comment: Yup.string(),
   }),
+  SHIFT: Yup.object().shape({
+    deliveries: Yup.number().required(constants.REQUIRED),
+    wolt: Yup.number().required(constants.REQUIRED),
+    creditTips: Yup.number(),
+    cashTips: Yup.number(),
+  }),
 };

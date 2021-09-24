@@ -1,12 +1,12 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Surface, Headline, IconButton} from 'react-native-paper';
+import {Surface, Headline, IconButton, Button} from 'react-native-paper';
 
 import useTimer from '../hooks/useTimer';
 import timeFormatter from '../utils/timeFormatter';
 import defaultStyles from '../config/defaultStyles';
 
-const AppTimerControlPanel = () => {
+const AppTimerControlPanel = ({onFinish}) => {
   const {
     timer,
     active,
@@ -15,7 +15,7 @@ const AppTimerControlPanel = () => {
     handlePause,
     handleResume,
     handleReset,
-  } = useTimer();
+  } = useTimer(8400);
 
   return (
     <Surface style={styles.timerControlPanelContainer}>
@@ -51,6 +51,15 @@ const AppTimerControlPanel = () => {
           disabled={!active}
         />
       </View>
+      <Button
+        onPress={() => {
+          // handleReset();
+          handlePause();
+          onFinish(timer);
+        }}
+        disabled={!active}>
+        Finish
+      </Button>
     </Surface>
   );
 };
