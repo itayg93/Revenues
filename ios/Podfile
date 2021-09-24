@@ -31,4 +31,6 @@ target 'Revenues' do
 
   pod 'GoogleSignIn', '~> 6.0.2'
 
+  pod 'react-native-background-timer', :path => '../node_modules/react-native-background-timer'
+
 end

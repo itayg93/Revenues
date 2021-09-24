@@ -10,6 +10,7 @@ import defaultStyles from '../config/defaultStyles';
 import LoadingScreen from './LoadingScreen';
 import AppScreen from '../components/AppScreen';
 import {AppSubmitExpenseForm} from '../components/form';
+import AppTimerControlPanel from '../components/AppTimerControlPanel';
 
 const DashboardScreen = () => {
   const {user, userProfile} = useContext(authContext);
@@ -37,6 +38,7 @@ const DashboardScreen = () => {
         />
         {/** start shift */}
         <Headline>{constants.START_SHIFT}</Headline>
+        <AppTimerControlPanel />
       </ScrollView>
     </AppScreen>
   );
