@@ -8,7 +8,7 @@ const submitExpense = (userId, values) => {
     .collection(constants.USERS_DATA)
     .doc(userId)
     .collection(constants.EXPENSES)
-    .doc(new Date(parseInt(values.timestamp, 10)).toString())
+    .doc(new Date(parseInt(values.time.timestamp, 10)).toString())
     .set(values);
 };
 
