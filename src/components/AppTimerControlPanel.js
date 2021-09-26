@@ -53,8 +53,7 @@ const AppTimerControlPanel = ({onFinish}) => {
       </View>
       <Button
         onPress={() => {
-          // handleReset();
-          handlePause();
+          handleReset();
           onFinish(timer);
         }}
         disabled={!active}>
