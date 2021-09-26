@@ -15,7 +15,10 @@ import SubmitShiftModal from '../modals/SubmitShiftModal';
 import shiftService from '../services/shiftService';
 
 const DashboardScreen = () => {
-  const {user, userProfile} = useContext(authContext);
+  const {
+    user: {uid},
+    userProfile: {commissionRate},
+  } = useContext(authContext);
 
   const [timeInSeconds, setTimeInSeconds] = useState(0);
   const [showSubmitShiftModal, setShowSubmitShiftModal] = useState(false);
@@ -24,7 +27,7 @@ const DashboardScreen = () => {
 
   const handleSubmitExpense = async values => {
     setLoading(true);
-    const response = await expenseService.handleSubmitExpense(user.uid, values);
+    const response = await expenseService.handleSubmitExpense(uid, values);
     setLoading(false);
     // error
     if (!response.isSuccess) return handlers.handleErrorAlert(response.error);
@@ -35,14 +38,10 @@ const DashboardScreen = () => {
   const handleSubmitShift = async values => {
     setShowSubmitShiftModal(false);
     setLoading(true);
-    const response = await shiftService.handleSubmitShift(
-      user.uid,
-      userProfile.commissionRate,
-      {
-        ...values,
-        timeInSeconds,
-      },
-    );
+    const response = await shiftService.handleSubmitShift(uid, commissionRate, {
+      ...values,
+      timeInSeconds,
+    });
     setLoading(false);
     // error
     if (!response.isSuccess) return handlers.handleErrorAlert(response.error);
