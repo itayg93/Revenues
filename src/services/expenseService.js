@@ -26,8 +26,7 @@ const handleGetExpensesByMonth = async (userId, month) => {
   try {
     const querySnapshot = await expenseApi.getExpenseByMonth(userId, month);
     // empty
-    if (querySnapshot.empty)
-      return handlers.handleError('None expenses found.');
+    if (querySnapshot.empty) return handlers.handleError('None expenses found');
     // success
     const expenses = [];
     querySnapshot.forEach(doc => expenses.push(doc.data()));

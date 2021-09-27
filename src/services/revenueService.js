@@ -4,51 +4,10 @@ import constants from '../utils/constants';
 import handlers from '../utils/handlers';
 import timeFormatter from '../utils/timeFormatter';
 
-const shiftsData = {
-  amountOfShifts: 0,
-  workTimeInSeconds: 0,
-  wolt: {
-    value: 0,
-    commission: 0,
-    valueExCommission: 0,
-  },
-  tips: {
-    credit: {
-      value: 0,
-      vat: 0,
-      commission: 0,
-      valueExVatCommission: 0,
-    },
-    cash: 0,
-  },
-  totals: {
-    valueExVatCommissionCash: 0,
-  },
-};
-
-const expensesData = {
-  insurancesPerMonth: 0,
-  fuel: 0,
-  maintenance: 0,
-  equipment: 0,
-  totals: {
-    valueExInsurances: 0,
-  },
-};
-
-const taxesData = {
-  taxPointsValue: 0,
-  nationalInsurance: 0,
-  incomeTax: 0,
-  totals: {
-    value: 0,
-  },
-};
-
-const netData = {
-  earnings: 0,
-  hourlyWage: 0,
-};
+const shiftsData = {...constants.shiftsData};
+const expensesData = {...constants.expensesData};
+const taxesData = {...constants.taxesData};
+const netData = {...constants.netData};
 
 // handle calculate revenues for month
 const handleCalculateRevenuesForMonth = async (userId, userProfile, month) => {
@@ -64,7 +23,7 @@ const handleCalculateRevenuesForMonth = async (userId, userProfile, month) => {
   if (!expensesRes.isSuccess)
     if (expensesRes.error !== 'None expenses found')
       return handlers.handleError(expensesRes.error);
-  if (expensesRes.data.length > 0) sumExpensesCosts(expensesRes.data);
+  if (expensesRes.data) sumExpensesCosts(expensesRes.data);
 
   // user
   taxesData.taxPointsValue =
@@ -75,19 +34,19 @@ const handleCalculateRevenuesForMonth = async (userId, userProfile, month) => {
   // taxes
   const earningsForTax = sumEarningsForTax(userProfile.taxRefunds);
   // national insurance
-  calculateNationalInsuranceFine(earningsForTax);
+  taxesData.nationalInsurance = calculateNationalInsuranceFine(earningsForTax);
   // income tax
-  calculateIncomeTaxFine(earningsForTax);
+  taxesData.incomeTax = calculateIncomeTaxFine(earningsForTax);
   taxesData.totals.value = taxesData.nationalInsurance + taxesData.incomeTax;
 
   // net
   calculateNet();
 
   return handlers.handleSuccess({
-    shiftsData,
-    expensesData,
-    taxesData,
-    netData,
+    shifts: shiftsData,
+    expenses: expensesData,
+    taxes: taxesData,
+    net: netData,
   });
 };
 
@@ -111,6 +70,7 @@ const getExpenses = async (userId, month) => {
 
 // handle sum shifts earnings
 const sumShiftsEarnings = shifts => {
+  resetShiftsData();
   shiftsData.amountOfShifts = shifts.length;
   shifts.forEach(s => {
     shiftsData.workTimeInSeconds += s.time.workTimeInSeconds;
@@ -137,6 +97,7 @@ const sumShiftsEarnings = shifts => {
 
 // handle sum expenses costs
 const sumExpensesCosts = expenses => {
+  resetExpensesData();
   expenses.forEach(e => {
     switch (e.type) {
       case 'fuel':
@@ -167,47 +128,46 @@ const sumEarningsForTax = taxRefunds => {
 
 // handle calculate national insurance fine
 const calculateNationalInsuranceFine = earnings => {
-  if (earnings <= 6331)
-    return (taxesData.nationalInsurance = earnings * 0.0705);
-  taxesData.nationalInsurance = 6331 * 0.0705 + (earnings - 6331) * 0.196;
+  if (earnings <= 6331) return earnings * 0.0705;
+  else return 6331 * 0.0705 + (earnings - 6331) * 0.196;
 };
 
 // handle calculate income tax fine
 const calculateIncomeTaxFine = earnings => {
-  let incomeTax = 0;
-  let incomeTaxA = 0;
-  let incomeTaxB = 0;
-  let incomeTaxC = 0;
-  let incomeTaxD = 0;
+  let iT = 0;
+  let iTa = 0;
+  let iTb = 0;
+  let iTc = 0;
+  let iTd = 0;
   if (earnings <= 6290) {
-    incomeTax = earnings * 0.1;
+    iT = earnings * 0.1;
   } else {
     if (earnings > 6290) {
-      incomeTaxA = 6290 * 0.1;
-      var remainEarnings = earnings - 6290;
+      iTa = 6290 * 0.1;
+      let remainEarnings = earnings - 6290;
       if (remainEarnings > 2740) {
-        incomeTaxB = 2740 * 0.14;
+        iTb = 2740 * 0.14;
         remainEarnings -= 2740;
         if (remainEarnings > 5460) {
-          incomeTaxC = 5460 * 0.2;
+          iTc = 5460 * 0.2;
           remainEarnings -= 5460;
           if (remainEarnings > 5650) {
-            incomeTaxD = 5650 * 0.31;
+            iTd = 5650 * 0.31;
             remainEarnings -= 5650;
           } else {
-            incomeTaxD = remainEarnings * 0.31;
+            iTd = remainEarnings * 0.31;
           }
         } else if (remainEarnings < 5460) {
-          incomeTaxC = remainEarnings * 0.2;
+          iTc = remainEarnings * 0.2;
         }
       } else if (remainEarnings < 2740) {
-        incomeTaxB = remainEarnings * 0.14;
+        iTb = remainEarnings * 0.14;
       }
-      incomeTax = incomeTaxA + incomeTaxB + incomeTaxC + incomeTaxD;
+      iT = iTa + iTb + iTc + iTd;
     }
   }
-  if (incomeTax - taxesData.taxPointsValue > 0)
-    taxesData.incomeTax = incomeTax - taxesData.taxPointsValue;
+  if (iT - taxesData.taxPointsValue > 0) return iT - taxesData.taxPointsValue;
+  else return 0;
 };
 
 // handle calculate net
@@ -220,6 +180,24 @@ const calculateNet = () => {
     expensesData.totals.valueExInsurances;
   netData.hourlyWage =
     netData.earnings / timeFormatter(shiftsData.workTimeInSeconds, true);
+};
+
+// handle reset shifts data
+const resetShiftsData = () => {
+  shiftsData.workTimeInSeconds = 0;
+  shiftsData.wolt.value = 0;
+  shiftsData.wolt.commission = 0;
+  shiftsData.tips.credit.value = 0;
+  shiftsData.tips.credit.vat = 0;
+  shiftsData.tips.credit.commission = 0;
+  shiftsData.tips.cash = 0;
+};
+
+// handle reset expenses data
+const resetExpensesData = () => {
+  expensesData.fuel = 0;
+  expensesData.maintenance = 0;
+  expensesData.equipment = 0;
 };
 
 export default {

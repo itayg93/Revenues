@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Paragraph, Switch} from 'react-native-paper';
+import {Subheading, Switch} from 'react-native-paper';
 import {useFormikContext} from 'formik';
 
 import defaultStyles from '../../config/defaultStyles';
@@ -16,7 +16,7 @@ const AppFormSwitch = ({name, label, value}) => {
 
   return (
     <View style={styles.container}>
-      <Paragraph style={styles.paragraph}>{label}</Paragraph>
+      <Subheading style={styles.paragraph}>{label}</Subheading>
       <Switch
         value={refunds}
         onValueChange={value => handleValueChange(value)}

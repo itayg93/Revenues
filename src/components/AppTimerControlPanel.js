@@ -15,7 +15,7 @@ const AppTimerControlPanel = ({onFinish}) => {
     handlePause,
     handleResume,
     handleReset,
-  } = useTimer(8400);
+  } = useTimer(10800);
 
   return (
     <Surface style={styles.timerControlPanelContainer}>
@@ -53,7 +53,8 @@ const AppTimerControlPanel = ({onFinish}) => {
       </View>
       <Button
         onPress={() => {
-          handleReset();
+          // handleReset();
+          handlePause();
           onFinish(timer);
         }}
         disabled={!active}>

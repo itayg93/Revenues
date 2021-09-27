@@ -93,4 +93,46 @@ export default {
     {label: 'Dec', value: 12},
   ],
   TAX_POINT_VALUE_2021: 218,
+  shiftsData: {
+    amountOfShifts: 0,
+    workTimeInSeconds: 0,
+    wolt: {
+      value: 0,
+      commission: 0,
+      valueExCommission: 0,
+    },
+    tips: {
+      credit: {
+        value: 0,
+        vat: 0,
+        commission: 0,
+        valueExVatCommission: 0,
+      },
+      cash: 0,
+    },
+    totals: {
+      valueExVatCommissionCash: 0,
+    },
+  },
+  expensesData: {
+    insurancesPerMonth: 0,
+    fuel: 0,
+    maintenance: 0,
+    equipment: 0,
+    totals: {
+      valueExInsurances: 0,
+    },
+  },
+  taxesData: {
+    taxPointsValue: 0,
+    nationalInsurance: 0,
+    incomeTax: 0,
+    totals: {
+      value: 0,
+    },
+  },
+  netData: {
+    earnings: 0,
+    hourlyWage: 0,
+  },
 };
