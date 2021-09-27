@@ -21,6 +21,23 @@ const handleSubmitExpense = async (userId, values) => {
   }
 };
 
+// handle get expenses by month
+const handleGetExpensesByMonth = async (userId, month) => {
+  try {
+    const querySnapshot = await expenseApi.getExpenseByMonth(userId, month);
+    // empty
+    if (querySnapshot.empty)
+      return handlers.handleError('None expenses found.');
+    // success
+    const expenses = [];
+    querySnapshot.forEach(doc => expenses.push(doc.data()));
+    return handlers.handleSuccess(expenses);
+  } catch (err) {
+    return handlers.handleError(err.message);
+  }
+};
+
 export default {
   handleSubmitExpense,
+  handleGetExpensesByMonth,
 };

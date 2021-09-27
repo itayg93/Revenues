@@ -12,6 +12,17 @@ const submitExpense = (userId, values) => {
     .set(values);
 };
 
+// get expense by month
+const getExpenseByMonth = (userId, month) => {
+  return firestore()
+    .collection(constants.USERS_DATA)
+    .doc(userId)
+    .collection(constants.EXPENSES)
+    .where('time.month', '==', month)
+    .get();
+};
+
 export default {
   submitExpense,
+  getExpenseByMonth,
 };

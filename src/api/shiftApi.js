@@ -12,6 +12,17 @@ const submitShift = (userId, values) => {
     .set(values);
 };
 
+// get shifts by month
+const getShiftsByMonth = (userId, month) => {
+  return firestore()
+    .collection(constants.USERS_DATA)
+    .doc(userId)
+    .collection(constants.SHIFTS)
+    .where('time.month', '==', month)
+    .get();
+};
+
 export default {
   submitShift,
+  getShiftsByMonth,
 };

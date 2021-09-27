@@ -15,6 +15,21 @@ const handleSubmitShift = async (userId, commissionRate, values) => {
   }
 };
 
+// handle get shifts by month
+const handleGetShiftsByMonth = async (userId, month) => {
+  try {
+    const querySnapshot = await shiftApi.getShiftsByMonth(userId, month);
+    // empty
+    if (querySnapshot.empty) return handlers.handleError('None shifts found.');
+    // success
+    const shifts = [];
+    querySnapshot.forEach(doc => shifts.push(doc.data()));
+    return handlers.handleSuccess(shifts);
+  } catch (err) {
+    return handlers.handleError(err.message);
+  }
+};
+
 // handle create shift object to submit
 const handleCreateShiftObjectToSubmit = (commissionRate, values) => {
   commissionRate /= 100;
@@ -61,4 +76,5 @@ const handleCreateShiftObjectToSubmit = (commissionRate, values) => {
 
 export default {
   handleSubmitShift,
+  handleGetShiftsByMonth,
 };
