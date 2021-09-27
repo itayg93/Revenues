@@ -39,12 +39,12 @@ const RevenuesScreen = () => {
     setRevenuesData(response.data);
   };
 
-  const handleMonthSelection = async () => {
-    await handleGetRevenuesData(setLoading);
+  const handleMonthSelection = () => {
+    handleGetRevenuesData(setLoading);
   };
 
-  const handleRefresh = async () => {
-    await handleGetRevenuesData(setRefresh);
+  const handleRefresh = () => {
+    handleGetRevenuesData(setRefresh);
   };
 
   return (
@@ -64,13 +64,15 @@ const RevenuesScreen = () => {
           </Chip>
         ))}
       </View>
-      <ScrollView
-        style={styles.revenuesDataContainer}
-        refreshControl={
-          <RefreshControl refreshing={refresh} onRefresh={handleRefresh} />
-        }>
-        {revenuesData && <AppRevenuesPanel revenues={revenuesData} />}
-      </ScrollView>
+      {revenuesData && (
+        <ScrollView
+          style={styles.revenuesDataContainer}
+          refreshControl={
+            <RefreshControl refreshing={refresh} onRefresh={handleRefresh} />
+          }>
+          <AppRevenuesPanel revenues={revenuesData} />
+        </ScrollView>
+      )}
     </AppScreen>
   );
 };
