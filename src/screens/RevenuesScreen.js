@@ -1,10 +1,9 @@
 import React, {useEffect, useState, useContext} from 'react';
 import {StyleSheet, View, ScrollView, RefreshControl} from 'react-native';
-import {Portal, Headline, Chip} from 'react-native-paper';
+import {Portal, Headline, Chip, Subheading, Button} from 'react-native-paper';
 
 import revenueService from '../services/revenueService';
 import authContext from '../auth/authContext';
-import handlers from '../utils/handlers';
 import constants from '../utils/constants';
 import defaultStyles from '../config/defaultStyles';
 import LoadingScreen from './LoadingScreen';
@@ -13,10 +12,14 @@ import AppRevenuesPanel from '../components/AppRevenuesPanel';
 
 const RevenuesScreen = () => {
   const {user, userProfile} = useContext(authContext);
+
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
   const [revenuesData, setRevenuesData] = useState();
+
   const [loading, setLoading] = useState(true);
   const [refresh, setRefresh] = useState(false);
+
+  const [error, setError] = useState('');
 
   useEffect(() => {
     handleMonthSelection();
@@ -33,7 +36,8 @@ const RevenuesScreen = () => {
     // error
     if (!response.isSuccess) {
       setRevenuesData();
-      return handlers.handleErrorAlert(response.error);
+      setError(response.error);
+      return;
     }
     // success
     setRevenuesData(response.data);
@@ -45,6 +49,10 @@ const RevenuesScreen = () => {
 
   const handleRefresh = () => {
     handleGetRevenuesData(setRefresh);
+  };
+
+  const handleRetry = () => {
+    handleGetRevenuesData(setLoading);
   };
 
   return (
@@ -64,7 +72,7 @@ const RevenuesScreen = () => {
           </Chip>
         ))}
       </View>
-      {revenuesData && (
+      {revenuesData ? (
         <ScrollView
           style={styles.revenuesDataContainer}
           refreshControl={
@@ -72,6 +80,11 @@ const RevenuesScreen = () => {
           }>
           <AppRevenuesPanel revenues={revenuesData} />
         </ScrollView>
+      ) : (
+        <View style={styles.errorContainer}>
+          <Subheading>{error}</Subheading>
+          <Button onPress={handleRetry}>Retry</Button>
+        </View>
       )}
     </AppScreen>
   );
@@ -94,5 +107,10 @@ const styles = StyleSheet.create({
   },
   revenuesDataContainer: {
     marginBottom: defaultStyles.spacers.space5,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
