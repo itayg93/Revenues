@@ -1,5 +1,13 @@
 import React, {useContext, useState} from 'react';
-import {StyleSheet, ScrollView} from 'react-native';
+import {
+  StyleSheet,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import {Portal, Headline} from 'react-native-paper';
 
 import authContext from '../auth/authContext';
@@ -8,7 +16,6 @@ import constants from '../utils/constants';
 import handlers from '../utils/handlers';
 import defaultStyles from '../config/defaultStyles';
 import LoadingScreen from './LoadingScreen';
-import AppScreen from '../components/AppScreen';
 import {AppSubmitExpenseForm} from '../components/form';
 import AppTimerControlPanel from '../components/AppTimerControlPanel';
 import SubmitShiftModal from '../modals/SubmitShiftModal';
@@ -50,37 +57,51 @@ const DashboardScreen = () => {
   };
 
   return (
-    <AppScreen style={styles.contentContainer}>
-      <Portal>{loading && <LoadingScreen />}</Portal>
-      <ScrollView>
-        {/** expense */}
-        <Headline>{constants.EXPENSE}</Headline>
-        <AppSubmitExpenseForm
-          onSubmitExpense={values => handleSubmitExpense(values)}
-        />
-        {/** shift */}
-        <Headline>{constants.SHIFT}</Headline>
-        <AppTimerControlPanel
-          onFinish={timer => {
-            setTimeInSeconds(timer);
-            setShowSubmitShiftModal(true);
-          }}
-        />
-        {/** submit shift modal */}
-        <Portal>
-          <SubmitShiftModal
-            visible={showSubmitShiftModal}
-            onFinish={values => handleSubmitShift(values)}
-          />
-        </Portal>
-      </ScrollView>
-    </AppScreen>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.keyboardAvoidingContainer}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <SafeAreaView style={styles.safeAreaViewContainer}>
+          <Portal>{loading && <LoadingScreen />}</Portal>
+          {/** expense */}
+          <View style={styles.contentContainer}>
+            <Headline>{constants.EXPENSE}</Headline>
+            <AppSubmitExpenseForm
+              onSubmitExpense={values => handleSubmitExpense(values)}
+            />
+          </View>
+          {/** shift */}
+          <View style={styles.contentContainer}>
+            <Headline>{constants.SHIFT}</Headline>
+            <AppTimerControlPanel
+              onFinish={timer => {
+                setTimeInSeconds(timer);
+                setShowSubmitShiftModal(true);
+              }}
+            />
+          </View>
+          {/** submit shift modal */}
+          <Portal>
+            <SubmitShiftModal
+              visible={showSubmitShiftModal}
+              onFinish={values => handleSubmitShift(values)}
+            />
+          </Portal>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
 export default DashboardScreen;
 
 const styles = StyleSheet.create({
+  keyboardAvoidingContainer: {
+    flex: 1,
+  },
+  safeAreaViewContainer: {
+    flex: 1,
+  },
   contentContainer: {
     padding: defaultStyles.spacers.space10,
   },

@@ -1,5 +1,13 @@
 import React, {useContext, useState} from 'react';
-import {StyleSheet, Keyboard, ScrollView, View} from 'react-native';
+import {
+  StyleSheet,
+  Keyboard,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  SafeAreaView,
+} from 'react-native';
 import {Portal, Headline} from 'react-native-paper';
 
 import validationSchemas from '../utils/validationSchemas';
@@ -10,7 +18,6 @@ import authService from '../services/authService';
 import profileService from '../services/profileService';
 import defaultStyles from '../config/defaultStyles';
 import LoadingScreen from '../screens/LoadingScreen';
-import AppScreen from '../components/AppScreen';
 import AppUserProfileCard from '../components/AppUserProfileCard';
 import {
   AppForm,
@@ -51,112 +58,118 @@ const AccountScreen = () => {
   };
 
   return (
-    <AppScreen>
-      <Portal>{loading && <LoadingScreen />}</Portal>
-      {/** profile card */}
-      <View style={styles.userProfileCardContainer}>
-        <AppUserProfileCard
-          user={user}
-          lastUpdateMillis={userProfile.timestamp}
-          onPress={handleLogout}
-        />
-      </View>
-      <ScrollView>
-        <View style={styles.appFormContainer}>
-          <AppForm
-            initialValues={{
-              taxPoints: '',
-              commissionRate: '',
-              compulsory: '',
-              collateral: '',
-            }}
-            validationSchema={validationSchemas.PROFILE}
-            onSubmit={async (values, {resetForm}) => {
-              Keyboard.dismiss();
-              await handleSubmit(values);
-              resetForm();
-            }}>
-            {/** taxes & commission */}
-            <Headline style={styles.headline}>
-              {constants.TAX_COMMISSION}
-            </Headline>
-            {/** tax refunds */}
-            <AppFormSwitch
-              name={constants.taxRefunds}
-              label={constants.TAX_REFUNDS}
-              value={userProfile.taxRefunds}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.keyboardAvoidingContainer}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <SafeAreaView>
+          <Portal>{loading && <LoadingScreen />}</Portal>
+          {/** profile card */}
+          <View style={styles.userProfileCardContainer}>
+            <AppUserProfileCard
+              user={user}
+              lastUpdateMillis={userProfile.timestamp}
+              onPress={handleLogout}
             />
-            <View style={styles.textInputsContainer}>
-              {/** tax points */}
-              <View style={styles.leftInputContainer}>
-                <AppFormTextInput
-                  name={constants.taxPoints}
-                  label={constants.TAX_POINTS}
-                  keyboardType="numeric"
-                />
-                <AppHelperText
-                  style={styles.helperText}
-                  message={`${constants.HELPER_TEXT_PREFIX}${userProfile.taxPoints}`}
-                  visible
-                />
+          </View>
+          <View style={styles.appFormContainer}>
+            <AppForm
+              initialValues={{
+                taxPoints: '',
+                commissionRate: '',
+                compulsory: '',
+                collateral: '',
+              }}
+              validationSchema={validationSchemas.PROFILE}
+              onSubmit={async (values, {resetForm}) => {
+                Keyboard.dismiss();
+                await handleSubmit(values);
+                resetForm();
+              }}>
+              {/** taxes & commission */}
+              <Headline style={styles.headline}>
+                {constants.TAX_COMMISSION}
+              </Headline>
+              {/** tax refunds */}
+              <AppFormSwitch
+                name={constants.taxRefunds}
+                label={constants.TAX_REFUNDS}
+                value={userProfile.taxRefunds}
+              />
+              <View style={styles.textInputsContainer}>
+                {/** tax points */}
+                <View style={styles.leftInputContainer}>
+                  <AppFormTextInput
+                    name={constants.taxPoints}
+                    label={constants.TAX_POINTS}
+                    keyboardType="numeric"
+                  />
+                  <AppHelperText
+                    style={styles.helperText}
+                    message={`${constants.HELPER_TEXT_PREFIX}${userProfile.taxPoints}`}
+                    visible
+                  />
+                </View>
+                {/** commission */}
+                <View style={styles.rightInputContainer}>
+                  <AppFormTextInput
+                    name={constants.commissionRate}
+                    label={constants.COMMISSION_RATE}
+                    keyboardType="numeric"
+                  />
+                  <AppHelperText
+                    style={styles.helperText}
+                    message={`${constants.HELPER_TEXT_PREFIX}${userProfile.commissionRate}${constants.PERCENTAGE}`}
+                    visible
+                  />
+                </View>
               </View>
-              {/** commission */}
-              <View style={styles.rightInputContainer}>
-                <AppFormTextInput
-                  name={constants.commissionRate}
-                  label={constants.COMMISSION_RATE}
-                  keyboardType="numeric"
-                />
-                <AppHelperText
-                  style={styles.helperText}
-                  message={`${constants.HELPER_TEXT_PREFIX}${userProfile.commissionRate}${constants.PERCENTAGE}`}
-                  visible
-                />
+              {/** insurances */}
+              <Headline style={styles.headline}>
+                {constants.INSURANCES}
+              </Headline>
+              <View style={styles.textInputsContainer}>
+                {/** compulsory */}
+                <View style={styles.leftInputContainer}>
+                  <AppFormTextInput
+                    name={constants.compulsory}
+                    label={constants.COMPULSORY}
+                    keyboardType="numeric"
+                  />
+                  <AppHelperText
+                    style={styles.helperText}
+                    message={`${constants.HELPER_TEXT_PREFIX}${userProfile.compulsory}${constants.INS}`}
+                    visible
+                  />
+                </View>
+                {/** collateral */}
+                <View style={styles.rightInputContainer}>
+                  <AppFormTextInput
+                    name={constants.collateral}
+                    label={constants.COLLATERAL}
+                    keyboardType="numeric"
+                  />
+                  <AppHelperText
+                    style={styles.helperText}
+                    message={`${constants.HELPER_TEXT_PREFIX}${userProfile.collateral}${constants.INS}`}
+                    visible
+                  />
+                </View>
               </View>
-            </View>
-            {/** insurances */}
-            <Headline style={styles.headline}>{constants.INSURANCES}</Headline>
-            <View style={styles.textInputsContainer}>
-              {/** compulsory */}
-              <View style={styles.leftInputContainer}>
-                <AppFormTextInput
-                  name={constants.compulsory}
-                  label={constants.COMPULSORY}
-                  keyboardType="numeric"
-                />
-                <AppHelperText
-                  style={styles.helperText}
-                  message={`${constants.HELPER_TEXT_PREFIX}${userProfile.compulsory}${constants.INS}`}
-                  visible
-                />
-              </View>
-              {/** collateral */}
-              <View style={styles.rightInputContainer}>
-                <AppFormTextInput
-                  name={constants.collateral}
-                  label={constants.COLLATERAL}
-                  keyboardType="numeric"
-                />
-                <AppHelperText
-                  style={styles.helperText}
-                  message={`${constants.HELPER_TEXT_PREFIX}${userProfile.collateral}${constants.INS}`}
-                  visible
-                />
-              </View>
-            </View>
-            {/** submit */}
-            <AppFormButton />
-          </AppForm>
-        </View>
-      </ScrollView>
-    </AppScreen>
+              {/** submit */}
+              <AppFormButton />
+            </AppForm>
+          </View>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
 export default AccountScreen;
 
 const styles = StyleSheet.create({
-  container: {
+  keyboardAvoidingContainer: {
     flex: 1,
   },
   userProfileCardContainer: {
