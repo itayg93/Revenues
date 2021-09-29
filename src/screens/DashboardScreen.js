@@ -84,6 +84,7 @@ const DashboardScreen = () => {
           <Portal>
             <SubmitShiftModal
               visible={showSubmitShiftModal}
+              onDismiss={() => setShowSubmitShiftModal(false)}
               onFinish={values => handleSubmitShift(values)}
             />
           </Portal>

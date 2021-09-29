@@ -1,18 +1,28 @@
 import React from 'react';
-import {StyleSheet, Keyboard, View} from 'react-native';
+import {StyleSheet, Keyboard, View, TouchableOpacity} from 'react-native';
 import {Modal, Headline} from 'react-native-paper';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import validationSchemas from '../utils/validationSchemas';
 import constants from '../utils/constants';
 import defaultStyles from '../config/defaultStyles';
 import {AppForm, AppFormTextInput, AppFormButton} from '../components/form';
 
-const SubmitShiftModal = ({visible, onFinish}) => {
+const SubmitShiftModal = ({visible, onDismiss, onFinish}) => {
   return (
     <Modal
       visible={visible}
       contentContainerStyle={styles.container}
       dismissable={false}>
+      {/** close icon */}
+      <TouchableOpacity onPress={onDismiss}>
+        <MaterialCommunityIcons
+          style={styles.closeIcon}
+          name="close"
+          size={24}
+          color={defaultStyles.colors.mediumGrey}
+        />
+      </TouchableOpacity>
       <AppForm
         initialValues={{
           deliveries: '',
@@ -83,6 +93,10 @@ const styles = StyleSheet.create({
     marginHorizontal: defaultStyles.spacers.space10,
     padding: defaultStyles.spacers.space15,
     backgroundColor: defaultStyles.colors.white,
+  },
+  closeIcon: {
+    alignSelf: 'center',
+    marginBottom: defaultStyles.spacers.space10,
   },
   textInputsContainer: {
     flexDirection: 'row',
